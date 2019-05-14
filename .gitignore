@@ -10,6 +10,7 @@ example1.html
 /.pnp
 .pnp.js
 package-lock.json
+/dist
 
 # testing
 /coverage
