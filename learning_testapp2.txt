@@ -1,4 +1,4 @@
-LEARNING TEST APP 2
+LEARNING TEST-APP2 v2
 ========================================
 (putting together everything I know, I think)
 GOAL: setup ReactJS project _without_ using a pre-built boilerplate
@@ -85,10 +85,98 @@ XX. start it up
         (access at `localhost:8080`)
 
 
-(line 7004)
-      "version": "2.2.1",
-      "resolved": "https://registry.npmjs.org/tar/-/tar-2.2.1.tgz",
-      "integrity": "sha1-jk0qJWwOIYXGsYrWlK7JaLg8sdE=",
+
+
+
+
+
+LEARNING TEST APP 2 v1
+========================================
+(putting together everything I know, I think)
+GOAL: setup ReactJS project _without_ using a pre-built boilerplate
+1.  create directory
+2.  initialize for npm
+        npm init -y
+3.  add other directories
+        /src
+        /dist
+4.  add base files
+        /src/index.js
+        /dist/index.html
+5.  install webpack
+        npm install --save-dev webpack webpack-dev-server webpack-cli
+6.  create `webpack.config.js`:
+        const webpack = require('webpack');
+
+        module.exports = {
+            entry: './src/index.js',
+            module: {
+                rules: [
+                    {
+                        test: /\.(js|jsx)$/,
+                        exclude: /node_modules/,
+                        use: ['babel-loader']
+                    }
+                ]
+            },
+            resolve: {
+                extensions: ['*', '.js', '.jsx']
+            },
+            output: {
+                path: __dirname + '/dist',
+                publicPath: '/',
+                filename: 'bundle.js'
+            },
+            devServer: {
+                contentBase: './dist'
+            }
+        };
+7.  update `package.json`:
+        ...
+        "scripts": {
+            "start": "webpack-dev-server --config ./webpack.config.js --mod development",
+            "build": "webpack --mode production",
+            ...
+        },
+        ...
+9.  install babel
+        npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
+        npm install --save-dev html-webpack-plugin ???
+            (or is this webpack?)
+            (is this actually needed?)
+9.  update `package.json`:
+        ...
+        "keywords": [],
+        "author": "",
+        "license": "ISC",
+        "babel": {                           << start
+            "presets": [
+                "@babel/preset-env",
+                "@babel/preset-react"
+            ]
+        },                                   << end
+        "devDependencies": {
+        ...
+10. install react
+        npm install react react-dom prop-types react-router-dom
+11. create react code or whatever
+12. install SASS
+        npm install css-loader sass-loader node-sass
+13. create SASS directories & files
+        /src/styles
+            _variables.scss
+            main.scss
+            (etc.)
+14. import SASS files into `main.scss`
+        @import '_variables.scss'
+        @import 'variables'
+15. import into JS
+        import styles from './styles/main.scss';
+XX. start it up
+        npm start
+        (access at `localhost:8080`)
+
+
 
 
 

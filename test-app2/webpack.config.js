@@ -42,6 +42,7 @@ module.exports = {
                             sourceMap: devMode,
                             importLoaders: 1,
                             //localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                            localIdentName: '[local]'
                         }
                     },
                     'sass-loader'
