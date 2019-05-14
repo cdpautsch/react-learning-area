@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Link } from "react-router-dom"
 
 import Cards from './components/cardsGame';
 
+import './styles/main.scss';
+
 /* ======= TestApp2 ReactJS ======= */
 
 class Navbar extends React.Component {

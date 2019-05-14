@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
 const SRC_DIR = __dirname + '/src';
@@ -19,7 +20,8 @@ module.exports = {
             //chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
             filename: '[name].css',
             chunkFilename: '[id].css'
-        })
+        }),
+        new CleanWebpackPlugin()
     ],
     module: {
         rules: [
@@ -39,7 +41,7 @@ module.exports = {
                             modules: true,
                             sourceMap: devMode,
                             importLoaders: 1,
-                            localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                            //localIdentName: '[path][name]__[local]--[hash:base64:5]'
                         }
                     },
                     'sass-loader'
