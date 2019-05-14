@@ -1,0 +1,1564 @@
+LEARNING REACT
+==============
+
+https://reactjs.org/docs/getting-started.html
+https://reactjs.org/tutorial/tutorial.html
+
+NEW JAVASCRIPT
+================================================================
+> https://gist.github.com/gaearon/683e676101005de0add59e8bb345340c
+> https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75
+> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+> http://jamesknelson.com/css-html-in-js-mistakes/
+> https://babeljs.io/docs/en/editors/ (syntax highlighting in VScode)
+
+Arrow Functions:
+    var x = function(x,y) { return x * y; }
+    
+    is equivalent to...
+
+    const x = (x,y) => x * y;
+
+
+
+CONCEPT TUTORIAL
+https://reactjs.org/docs/hello-world.html
+=========================================
+
+JSX
+-----------------------------------------
+JSX is not HTML-in-JS
+    const element = <div className="test">Hello World</div>;
+        =
+    React.createElement('div', {className: 'test'}, "Hello World")
+
+Example 1
+    const name = "Raynor";
+    const element = <h1>Hello, {name}</h1>;
+    ReactDOM.render(
+        element,
+        document.getElementByID('root');
+    )
+
+* You can put any JS expression inside curly braces in JSX
+    const element = <img src={user.avatarUrl} />
+* You should use parentheses around multi-line JSX to avoid automatic semicolons.
+* JSX uses camel-case property naming
+    class --> className
+    tabindex --> tabIndex
+* JSX tags may have children
+* React DOM escapes any values embedded in JSX before rendering them
+* React Elements = elements created with JSX & React.createElement. Descriptions of what you will see on the screen.
+* Components are made of elements
+* React apps typically have a single root DOM node (everything inside is managed by React)
+* "Element is like a single frame in a movie; it represents the UI at a certain point in time"
+* Most React apps only call ReactDOM.render() once --> stateful Components
+* React only updates what's necessary; it compares element & children to previous one, and applies updates as necessary
+
+Components
+--------------------------------------------
+* like JS functions
+* accept inputs (props) and return elements
+* Component API: https://reactjs.org/docs/react-component.html
+* Example
+    function Welcome(props) {
+        return <h1>Hello, {props.name}</h1>;
+    }
+* Example
+    class Welcome extends React.Component {
+        render() {
+            return <h1> Hello, {this.props.name}</h1>;
+        }
+    }
+* User defined Components!
+* const element = <Welcome name="Sara" />;
+* Example
+    function Welcome(props) {
+        return <h1>Hello, {props.name}</h1>;
+    }
+    
+    const element = <Welcome name="Sarah" />;
+    ReactDOM.render(
+        element,
+        document.getElementByID('root');
+    )
+* When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object (props!)
+* Component names should always start w/ uppercase
+* Essentially...
+    const element = <Component propAttribute='propValue'/>;
+* Components can refer to other components in their output
+* Props is not a mandatory argument
+    function Welcome(props) {
+        return <h1>Hello, {props.name}</h1>;
+    }
+    function App() {
+        return (
+            <div>
+                <Welcome name="Sara" />
+                <Welcome name="Cahal" />
+                <Welcome name="Edite" />
+            </div>
+        );
+    }
+    ReactDOM.render(
+        <App />,
+        document.getElementByID('root');
+    )
+* Typically, new React apps have a single `App` component at the very top.
+* Name components for their own point of view, rather than in the context of which they are being used
+* Components can NEVER modify props
+
+State
+-------------------------------------
+* `State` is similar to `props`, but is private and fully controlled byt the component
+* First, convert function to a class
+    * function
+        function Clock(props) {
+            return (
+                <div>
+                    <h2>It is {props.date.toLocaleTimeString()}</h2>
+                </div>
+            )
+        }
+    * class
+        class Clock extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <h2>It is {this.props.date.toLocaleTimeString()}</h2>
+                    </div>
+                )
+            }
+        }
+    * Note: Render method is called each time an update happens, but as long as we render <Clock /> into the same DOM node, only a single instance of the class will be used (allowing us to use state)
+* Next steps:
+    * Replace `props` with `state`
+    * Add constructor
+    * Remove date prop from <Clock /> element (none needs to be passed)
+    * Result
+        class Clock extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {date: new Date()};
+            }
+            render() {
+                return (
+                    <div>
+                        <h2>It is {this.state.date.toLocaleTimeString()}</h2>
+                    </div>
+                )
+            }
+        }
+    * Call with:
+        <Clock />
+* What about updating time?
+* We setup a timer when it is rendered for the first time --> "mounting"
+* Clear the time whenever the DOM produced by `Clock` is removed --> "unmounting"
+* Special methods on component class for this: lifecycle methods
+    componentDidMount() {}
+        runs after rendering
+    componentWillUnmount() {}
+        runs when component is removed
+* Our lifecycle methods:
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+* Note: you can add whatever other fields you need to the component to store information outside of the normal data flow (like a timer ID)
+* Final step:
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+* `this.setState()` is used to schedule updates to the component local state
+* You cannot change state directly
+    * WRONG: this.state.comment = 'Hi';
+    * RIGHT: this.setState({comment: 'Hi'});
+    * You can only set `this.state` in the constructor
+* State Updates may be asynchronous
+    * Batched for performance
+    * Do not rely on `this.state` or `this.props` for state updates
+        * WRONG:
+            this.setState({
+                counter: this.state.counter + this.props.increment
+            })
+        * CORRECT:
+            this.setState((state, props) => ({
+                counter: state.counter + props.increment
+            }));
+        * Why? Function will receive previous state and props at time of update
+* When using `setState()`, React merges the object into the current state
+    * State may have many independent variables
+    * Each can be updated independently without affecting the other
+    * Merging is shallow; the modified attribute is replaced, but others are left intact
+* State is local and encapsulated; neither children nor parents know anything about it
+    * Top-Down or Unidirectional
+
+Event Handling
+--------------------------------------------------
+* Some differences, e.g. camelCase
+    * Syntax
+        * HTML
+            <button onclick="activateLasers()">
+                Activate Lasers
+            </button>
+        * React
+            <button onClick={activateLasers}>
+                Activate Lasers
+            </button>
+    * camelCase naming
+    * You cannot return false to prevent default behavior
+        * You must call `preventDefault` explicitly.
+        * HTML
+            <a href="#" onclick="console.log('Link clicked'); return false">
+                Click me
+            </a>
+        * React
+            function ActionLink() {
+                function handleClick(e) {
+                    e.preventDefault();
+                    console.log('Link clicked');
+                }
+                return (
+                    <a href="#" onClick={handleClick}>
+                        Click Me
+                    </a>
+                )
+            }
+        * `e` is a synthetic event
+    * Generally, you should add listeners to a DOM element when it is rendered
+* Example using a class
+    class Toggle extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {isToggleOn: true};
+
+            // binding necessary to make `this` work in the callback
+            this.handleClick = this.handleClick.bind(this);
+        }
+        handleClick() {
+            this.setState(state => ({
+                isToggleOn: !state.isToggleOn
+            }));
+        }
+        render() {
+            return (
+                <button onClick={this.handleClick}>
+                    {this.state.isToggleOn ? 'ON' : 'OFF'}
+                </button>
+            );
+        }
+    }
+
+    RenderDOM.render(
+        <Toggle />,
+        document.getElementByID('root');
+    )
+
+* Meaning of 'this'
+    * In JS, class methods not bound by default
+* Passing arguments
+    * Example
+        <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+
+Conditional Rendering
+-----------------------------------------------
+* You can use conditionals just like normal
+* You can store JSX elements in variables
+    * Example:
+        class LoginControl extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleLoginClick = this.handleLoginClick.bind(this);
+                this.handleLogoutClick = this.handleLogoutClick.bind(this);
+                this.state = {isLoggedIn: true};
+            }
+            handleLoginClick() {
+                this.setState({isLoggedIn: true});
+            }
+            handleLogoutClick() {
+                this.setState({isLoggedIn: false});
+            }
+            render() {
+                const isLoggedIn = this.state.isLoggedIn;
+                let button;
+
+                if (isLoggedIn) {
+                    button = <LogoutButton onClick={this.handleLogoutClick} />;
+                }
+                else {
+                    button = <LogoutButton onClick={this.handleLoginClick} />;
+                }
+
+                return (
+                    <div>
+                        <Greeting isLoggedIn={isLoggedIn} />
+                        {button}
+                    </div>
+                );
+            }
+        }
+* You can also inline stuff
+    * The && expression
+        true && expression --> always expression
+        false && expression --> always false
+    * Example
+        ...
+        <h1>Hello!</h1>
+        {unreadMessages.length > 0 &&
+            <h2>
+                You have {unreadMessages.length} unread messages.
+            </h2>
+        }
+        ...
+* Inline if-else
+    * Basic syntax:
+        condition ? true : false
+    * Example:
+        ...
+        The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in.
+        ...
+    * It can be used for larger expressions, but it gets more confusing
+* Remember: if it gets too confusing, consider extracting parts into new components!
+* Preventing Components from rendering
+    * return null instead of it's render output
+    * Example
+        function WarningBanner(props) {
+            if (!props.warn) {
+                return null;
+            }
+
+            return (
+                <div className="warning">
+                    Warning!
+                </div>
+            )
+        }
+
+        ...
+
+        <WarningBanner warn={this.state.showWarning} />
+    * Note: returning `null` does not affect lifecycle methods, e.g. `componentDidUpdate` will still be called
+
+Lists and Keys
+----------------------------------------
+* JS Example:
+    const numbers = [1,2,3];
+    const doubled = numbers.map((number) => number * 2);
+    console.log(doubled); // [2,4,6] will print
+* React does the same thing with lists of elements
+* Building collections of elements & including them in JSX
+    * Example (basic)
+        const numbers = [1,2,3,4,5];
+        const listItems = numbers.map((number) => 
+            <li>{number}</li>
+            );
+
+        ReactDOM.render(
+            <ul>{listItems}</ul>,
+            document.getElementByID('root');
+        )
+* Note: when creating lists of elements, they should have a key
+    * Example (inside a component)
+        function NumberList(props) {
+            const numbers = props.numbers;
+            const listItems = numbers.map((number) =>
+                <li key={number.toString()}>
+                    {number}
+                </li>
+            );
+            return (
+                <ul>{listItems}</ul>
+            );
+        }
+
+        const numbers = [1,2,3,4,5];
+        ReactDOM.render(
+            <NumbersList numbers={numbers} />,
+            document.getElementByID('root');
+        )
+* Keys help React identify which items have been changed/added/removed
+    * Ideally, use uniquely identifiable IDs from your data, e.g. `item.id`
+    * Indexes can be problematic if items are re-ordered
+    * Keys must only be unique among their siblings, not globally
+* Keys are JS properties and you can't see them in HTML
+* Elements inside the map() call need keys. Don't put the keys inside child component calls.
+    * Example:
+        Wrong:  <li key={} ...
+        Right:  <Listitem key={} ...
+* If you need a key value in your component for some reason, pass it explicitly as a prop with a different name
+    * e.g key={post.id}, id={post.id} ...
+* You can also inline the map() result
+    * Example:
+        <ul>
+            {numbers.map((number) => 
+                <ListItem key={...} ... )}
+            ...
+
+Forms
+--------------------------------------------
+* HTML form elements work a little differently, as they naturally keep some internal state
+* Example:
+    <form>
+        <label>
+            Name:
+            <input type="text" name="name" />
+        </label>
+        <input type="submit" value="Submit" />
+    </form>
+* Controlled Components
+    * input, textarea, and select typically maintain their own state and update it based on user input
+    * In React, mutable state is typically kept in the state property of components, and only updated w/ setState()
+    * We can combine the two --> React state is the "single source of truth", then React component that renders a form also controls what happens in that form on subsequent user input
+    * Controlled Component = an input form element whose value is controlled by React in this way
+* Example:
+    class NameForm extends React.Component {
+        constructor(props) {
+            super(this);
+            this.state = {value: ''};
+
+            this.handleChange = this.handleChange.bind(this);
+            this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleChange(event) {
+            this.setState({value: event.target.value});
+        }
+
+        handleSubmit(event) {
+            alert('A name was submitted: ' + this.state.value);
+            event.preventDefault();
+        }
+
+        render() {
+            return (
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Name:
+                        <input type="text" value={this.state.value} onChange={this.handleChange} />
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+            );
+        }
+    }
+* You essentially have `handleChange()` running on every keystroke to update the React state, making it the single source of truth.
+    * This makes it easier to modify or validate user input
+    * Example: names must be uppercase
+        handleChange(event) {
+            this.setState({value: event.target.value.toUpperCase()});
+        }
+* Textarea: defines its text by its children
+    * Example
+        <textarea>
+            Text
+        </textarea>
+    * In React, a `<textarea>` uses the `value` attribute, and it can be written similar to `<input>`
+    * One thing you can do is also initialize the text area with a starting value
+* Select tag has lots of children
+    * Example
+        <select>
+            <option selected value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+        </select>
+    * React doesn't use `selected`, but rather a `value` attribute on the root `select` tag
+    * Example
+        handleChange(event) {
+            this.setState({value: event.target.value});
+        }
+
+        ...
+
+        <select value={this.state.value} onChange={this.handleChange}>
+
+* You can also pass an array
+    <select multiple={trust} value={['B','C']}>
+* In the end, they all work similarly
+* File inputs are read-only and so are "Uncontrolled Elements" in React. (covered later in advanced tutorials)
+* Multiple inputs --> you need a "name" attribute for each element
+    * Example
+        handleInputChange(event) {
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+            
+            this.setState({
+                [name]: value
+            });
+        }
+
+        render() {
+            return (
+                <form>
+                    <label>
+                        Is going:
+                        <input
+                            name="isGoing"
+                            type="checkbox"
+                            checked={this.state.isGoing}
+                            onChange={this.handleInputChange} />
+                    </label>
+                    <br/>
+                    <label>
+                        Number of guests:
+                        <input
+                            name="numberOfGuests"
+                            type="number"
+                            value={this.state.numberOfGuests}
+                            onChange={this.handleInputChange} />
+                    </label>
+                </form>
+            );
+        }
+
+    * Explanation: A single `handleInputChange()` function is used, but must be able to handle multiple input types. In this case, it determines what kind of input the target is, and extracts the appropriate value accordingly.
+    * Note: we use the ES6 computed property name syntax to update the state key:
+        [name]: value
+
+* When you set the value property of an input element, you make it uneditable by the user unless you want it to be so. If it's still editable, you may have set it to `null` or `undefined`.
+* Controlled components can be tedious to implement, especially when converting a non-React app or integrating with a non-React library. Alternative --> Uncontrolled Components
+* Formik is a popular library for handling input and various associated tasks
+
+Lifting State Up
+-------------------------------------------------
+* "Often, several components need to reflect the same changing data. We recommend lifting the shared state up to their closest common ancestor. Let's see how this works in action."
+* We want to track both Celsius and Fahrenheit temperatures simultaneously. Problem: when one input updates, the other doesn't update. We want to keep them in sync.
+    * How? We move the state change up to the nearest common ancestor (including removing local state from lower elements)
+    * In our example, Calculator will hold the shared state
+* Example (problem: cannot share state)
+    const scaleNames = {
+        c: 'Celsius',
+        f: 'Fahrenheit'
+    }
+
+    function toCelsius(fahrenheit) {
+        return (fahrenheit - 32) * 5/9;
+    }
+    
+    function toFahrenheit(celsius) {
+        return (celsius * 9/5) + 32;
+    }
+
+    // in this case, you pass a conversion function to `convert`
+    function tryConvert(temperature, convert) {
+        const input = parseFloat(temperature);
+        if (Number.isNaN(input)) {
+            return '';
+        }
+        const output = convert(input);
+        const rounded = Math.round(output * 1000) / 1000;
+        return rounded.toString();
+    }
+
+    function BoilingVerdict(props) {
+        if (props.celsius >= 100) {
+            return <p>The water would boil.</p>
+        }
+        return <p>The water would not boil.</p>
+    }
+
+    class TemperatureInput extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+            this.state = {temperature: ''};
+        }
+
+        handleChange(e) {
+            this.setState({temperature: e.target.value});
+        }
+
+        render() {
+            const temperature = this.state.temperature;
+            const scale = this.state.scale;
+            return (
+                <fieldset>
+                    <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                    <input
+                        value={temperature}
+                        onChange={this.handleChange} />
+                    
+                    <BoilingVeridct
+                        celsius={parseFloat(temperature)} />
+                    
+                </fieldset>
+            )
+        }
+    }
+
+    class Calculator extends React.Component {
+        render() {
+            return (
+                <div>
+                    <TemperatureInput scale="c" />
+                    <TemperatureInput scale="f" />
+                </div>
+            );
+        }
+    }
+* Example (fixed)
+    const scaleNames = {
+        c: 'Celsius',
+        f: 'Fahrenheit'
+    }
+
+    function toCelsius(fahrenheit) {
+        return (fahrenheit - 32) * 5/9;
+    }
+    
+    function toFahrenheit(celsius) {
+        return (celsius * 9/5) + 32;
+    }
+
+    // in this case, you pass a conversion function to `convert`
+    function tryConvert(temperature, convert) {
+        const input = parseFloat(temperature);
+        if (Number.isNaN(input)) {
+            return '';
+        }
+        const output = convert(input);
+        const rounded = Math.round(output * 1000) / 1000;
+        return rounded.toString();
+    }
+
+    function BoilingVerdict(props) {
+        if (props.celsius >= 100) {
+            return <p>The water would boil.</p>
+        }
+        return <p>The water would not boil.</p>
+    }
+
+    class TemperatureInput extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+            this.state = {temperature: ''};
+        }
+
+        handleChange(e) {
+            // this.setState({temperature: e.target.value});
+            this.props.onTemperatureChange(e.target.value);
+        }
+
+        render() {
+            // const temperature = this.state.temperature;
+            const temperature = this.props.temperature;
+            // const scale = this.state.scale;
+            const scale = this.props.scale;
+            return (
+                <fieldset>
+                    <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                    <input
+                        value={temperature}
+                        onChange={this.handleChange} />
+                </fieldset>
+            )
+        }
+    }
+
+    class Calculator extends React.Component {
+        constructor(props) {
+            super(props);
+
+            this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+            this.handleFahrenheitChange = this.handleFahrenheitChange.bind9this);
+
+            this.state = {temperature: '', scale: 'c'};
+        }
+
+        handleCelsiusChange(temperature) {
+            this.setState({scale: 'c', temperature});
+        }
+
+        handleFahrenheitChange(temperature) {
+            this.setState({scale: 'f', temperature});
+        }
+
+        render() {
+            const scale = this.state.scale;
+            const temperature = this.state.temperature;
+            const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+            const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+
+            return (
+                <div>
+                    <TemperatureInput scale="c" temperature={celsius} onTemperatureChange={this.handleCelsiusChange} />
+
+                    <TemperatureInput scale="f" temperature={fahrenheit} onTemperatureChange={this.handleFahrenheitChange} />
+                    
+                    <BoilingVeridct
+                        celsius={parseFloat(temperature)} />
+                </div>
+            );
+        }
+    }
+
+* Reminder ==> There should always be a single "source of truth" for any data that changes in a React application
+    * (usually) add state first to component that needs it
+    * If other ancestors need it, you can lift it up to nearest common ancestor
+    * Remember the top-down data flow!
+
+Composition vs. Inheritance
+-------------------------------------------------
+* Containment
+    * Some components don't know their children ahead of time (especially common w/ `sidebar` and `dialog` components)
+    * Recommend using the special 'children' prop to pass children elements directly into their output:
+        function FancyBorder(props) {
+            return (
+                <div className={'FancyBorder FancyBorder-' + props.color}>
+                    {props.children}
+                </div>
+            );
+        }
+    * This lets other components pass arbitrary children to them by nesting the JSX
+        function WelcomeDialog() {
+            return (
+                <Fancyborder color="blue">
+                    <h1>Welcome</h2>
+                    <p>Thanks for visiting!</p>
+                </FancyBorder>
+            );
+        }
+    * Anything inside the `<FancyBorder>` JSX tag is passed as a `children` prop
+    * Sometimes you may need to insert children at multiple locations, and you can come up with your own convention in `props` instead of `children`
+        function SplitPane(props) {
+            return (
+                <div className="SplitPane">
+                    <div className="SplitPane-left">
+                        {props.left}
+                    </div>
+                    <div className="SplitPane-right">
+                        {props.right}
+                    </div>
+                </div>
+            );
+        }
+        function App() {
+            return (
+                <SplitPane
+                    left={
+                        <Contacts />
+                    }
+                    right={
+                        <Chat />
+                    } />
+            );
+        }
+* Specialization
+    * Components can be "special cases" of other components
+        * e.g. `WelcomeDialog` is a special case of `Dialog`
+    * In React, this is achieved by composition; a more "specific" component renders a more "generic" one:
+        function Dialog(props) {
+            return (
+                <FancyBorder color="blue>
+                    <h1>{props.title}</h1>
+                    <p>{props.message}</p>
+                </FancyBorder>
+            );
+        }
+        function WelcomeDialog() {
+            return (
+                <Dialog
+                    title="Welcome"
+                    message="Thank you for visiting our spacecraft!" />
+            );
+        }
+    * Composition also works for components defined as classes:
+        function Dialog(props) {
+            return (
+                <FancyBorder color="blue">
+                    <h1>{props.title}</h1>
+                    <p>{props.message}</p>
+                    {props.children}
+                </FancyBorder>
+            );
+        }
+
+        class SignUpDialog extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleChange = this.handleChange.bind(this);
+                this.handleSignUp = this.handleSignUp.bind(this);
+                this.state = {login: ''};
+            }
+            render() {
+                return (
+                    <Dialog title="Mars Exploration Program"
+                        message="How should we refer to you?">
+                        <input value={this.state.login}
+                            onChange={this.handleChange} />
+                        <button onClick={this.handleSignUp}>
+                            Sign me up!
+                        </button>
+                    </Dialog>
+                );
+            }
+            handleChange(e) {
+                this.setState({login: e.target.value});
+            }
+            handleSignUp() {
+                alert(`Welcome aboard, ${this.state.login}!`);
+            }
+        }
+* It is recommended to not use Inheritance
+
+Thinking in React
+--------------------------------------------
+* Start with a Mock UI & Mock Data
+* Step 1: Break the UI into a Component Hierarchy
+    * Single Responsibility Principle = a component should ideally do one thing
+    * UI and data will often adhere to the same information architecture
+* Step 2: Build a Static version in React
+    * Render the UI with no interactivity
+    * Pass data with props
+    * Don't use state at all
+    * Build top-down or bottom-up (but data/state must always flow top-down)
+    * Everything should only have `render()` methods
+    * Component at top of the hierarchy will take the data model as a prop
+* Step 3: Identify the Minimal (but complete) representation of UI State
+    * DRY = Don't Repeat Yourself
+    * Figure out the minimum and calculate everything else you need on-demand
+    * Is it state?
+        * Is it passed in from a parent via props? --> Not state
+        * Does it remain unchanged over time? --> Not state
+        * Can you compute it based on other state/props? --> Not state
+* Step 4: Identify where your State should live
+    * For each piece of state in the app...
+        * Identify every component that renders something based on that state
+        * Find a common owner component (a single component above all the components that need the state in the hierarchy)
+        * Either the common owner or another component higher up in the hierarchy should own the state
+        * If you can't find a component where it makes sense to own the state, create a new component simply for holding the state and add it somewhere in the hierarchy above the common owner
+* Step 5: Add Inverse Data Flow
+    * Next; support data flowing the other way: the form components deep in the hierarchy need to update the state in the common state owner
+    * The elements higher in the hierarchy will pass callbacks down to their lower-level components
+
+--------------------------------------------------
+--------------------------------------------------
+
+API REFERENCE:
+    https://reactjs.org/docs/react-api.html
+
+--------------------------------------------------
+--------------------------------------------------
+
+
+ADVANCED TUTORIALS
+==========================================================
+
+Context
+-------------------------------------------
+https://reactjs.org/docs/context.html
+* What if you need to pass some props down several levels to a low level component? You have to manually pass them all the way down, which is annoying
+* With context:
+    const ThemeContext = React.createContext('light');
+
+    ...
+    render () {
+        return (
+            <ThemeContext.Provider value="dark">
+                <toolbar />
+            </ThemeContext.Provider>
+        );
+    }
+    
+    function Toolbar(props) {
+        return (
+            <div>
+                <ThemedButton />
+            </div>
+        );
+    }
+
+    class ThemedButton extends React.Component {
+        static contextType = ThemeContext;
+        render () {
+            return <Button theme={this.context} />;
+        }
+    }
+    ...
+
+* Context "broadcasts" info to all descendant components
+* You can also pass down the component itself, creating it at a highler level and just passing it along to the lower levels
+    ...
+        const userLink = (
+            <Link href={user.permalink}>
+                <Avatar user={user} size={props.avatarSize} />
+            </Link>
+        );
+        return <PageLayout userLink={userLink} />
+    }
+
+    ...
+    <Page user={user} avatarSize={avatarSize} />
+    ...
+    <PageLayout userLink={...} />
+    ...
+    <NavigatioNBar userLink={...} />
+    ...
+    {props.userLink}
+
+* Inversion of control can make your code cleaner, but it also moves complexity up the tree, and makes lower level components more flexible than you might want.
+* You may also pass multiple elements in this fashion
+
+* Context API
+    const MyContext = React.createContext(defaultValue);
+        * creates a context object
+        * when React renders a component that subscribes to this Context object, it will read the current context value from the closest matching Provider above it in the tree
+
+    <MyContext.Provider value={somevalue}>
+        * allows consuming components to subscribe to context changes
+        * comes with every context object
+        * accepts value to pass to any subscribing (e.g. contained within the provider) components
+
+    MyClass.contextType = MyContext;
+        * can be assigned to a Context object
+        * allows component to consume the nearest current value of that Context type using `this.context`
+
+    <MyContext.Consumer>
+        {value => /* render something based on context value */}
+    </MyContext.Consumer>
+        * a component that subscribes to context changes
+        * allows you to subscribe to a context within a 'Function Component'
+        * Requires a function as a child, which receives the current context value and returns a React node
+
+
+Error Boundary
+-------------------------------------------
+* Error boundaries catch certain errors in their children and provide alternate renders to gracefully handle problems
+* Class component becomes error boundary if it defines either/both of lifecycle methods:
+    static getDerivedStateFromError() --> render fallback UI after error
+    componentDidCatch() --> log error info
+* Example
+    ...
+    static getDerivedStateFromError(error) {
+        // updates state to render fallback UI
+        return { hasError: true};
+    }
+
+    componentDidCatch(error, info) {
+        logErrorToMyService(error, info);
+    }
+    ...
+    <ErrorBoundary>
+        ...
+    </ErrorBoundary>
+* Will not catch errors in the boundary itself
+* As of React 16, errors not caught by any boundary will result in unmounting of the whole React component tree
+* Will not catch errors inside event handlers
+    * Why? React doesn't need them. The handlers don't happen during render. If they throw, React still knows what to display
+    * If you want to handle errors, use `try ... catch` blocks
+
+
+Forwarding Refs & Refs and the DOM
+-------------------------------------------
+* A way to access child nodes deeper in the hierarchy
+* Do not overuse!
+* Cannot be used on functions, only classes (but can be used inside functions)
+* Can be passed/forwarded
+* You can also create a function and pass it, so it can be accessed elsewhere
+    * Example
+        ...
+        super(props);
+        this.textInput = null;
+        this.setTextInputRef = element => {
+            this.textInput = element;
+        };
+        
+        ...
+
+        ...
+        <input
+            type="text"
+            ref={this.setTextInputRef}
+        />
+        ...
+
+
+Fragments
+-------------------------------------------
+* common pattern is for component to return multiple elements
+* Fragments let you group list of children without adding extra nodes to the DOM
+* Example
+    render() {
+        return (
+            <React.Fragment>
+                <ChildA />
+                <ChildB />
+                <ChildC />
+            </React.Fragment>
+        )
+    }
+* KEY FACT WHICH YOU MISSED SOMEHOW: the `render()` method must return _exactly one_ element
+    * Hence, you need wrappers
+    * but what if you want to return multiple elements without a wrapper?
+    * Hence, you need fragments
+
+
+Higher-Order Components
+-------------------------------------------
+* A way of reusing component logic
+* Not part of the API per se, but a pattern outgrowth from React's compositional nature
+* HOC = a function that takes a component and returns a new component
+* Example
+    const EnhancedComponent = higherOrderComponent(WrappedComponent);
+* Example 2
+    Component:  props --> UI
+    HOC:        component --> another component
+* Example 3
+    const CommentListWithSubscription = withSubscription(
+        CommentList,
+        (DataSource) => DataSource.getComments()
+    );
+
+    const BlogPostWithSubscription = withSubscription(
+        BlogPost,
+        (DataSoruce, props) => DataSource.getBlogPost(props.id)
+    );
+
+    // This function takes a component...
+    function withSubscription(WrappedComponent, selectData) {
+    // ...and returns another component...
+    return class extends React.Component {
+        constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            data: selectData(DataSource, props)
+        };
+        }
+
+        componentDidMount() {
+        // ... that takes care of the subscription...
+        DataSource.addChangeListener(this.handleChange);
+        }
+
+        componentWillUnmount() {
+        DataSource.removeChangeListener(this.handleChange);
+        }
+
+        handleChange() {
+        this.setState({
+            data: selectData(DataSource, this.props)
+        });
+        }
+
+        render() {
+        // ... and renders the wrapped component with the fresh data!
+        // Notice that we pass through any additional props
+        return <WrappedComponent data={this.state.data} {...this.props} />;
+        }
+    };
+    }
+
+* HOCs are entirely props-based, meaning you can swap out the HOC as long as whatever you use provides the same props to the wrapped component
+
+
+Typechecking with PropTypes
+-------------------------------------------------
+* Example
+    import PropTypes from 'prop-types';
+
+    class Greeting extends React.Component {
+        ...
+        {this.props.name}
+        ...
+    }
+
+    Greetings.propTypes = {
+        name: PropTypes.string
+    }
+
+* Example 2
+    MyComponent.propTypes = {
+    // You can declare that a prop is a specific JS type. By default, these are all optional.
+    optionalArray: PropTypes.array,
+    optionalBool: PropTypes.bool,
+    optionalFunc: PropTypes.func,
+    optionalNumber: PropTypes.number,
+    optionalObject: PropTypes.object,
+    optionalString: PropTypes.string,
+    optionalSymbol: PropTypes.symbol,
+
+    // Anything that can be rendered: numbers, strings, elements or an array (or fragment) containing these types.
+    optionalNode: PropTypes.node,
+
+    // A React element.
+    optionalElement: PropTypes.element,
+
+    // You can also declare that a prop is an instance of a class. This uses JS's instanceof operator.
+    optionalMessage: PropTypes.instanceOf(Message),
+
+    // You can ensure that your prop is limited to specific values by treating it as an enum.
+    optionalEnum: PropTypes.oneOf(['News', 'Photos']),
+
+    // An object that could be one of many types
+    optionalUnion: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.instanceOf(Message)
+    ]),
+
+    // An array of a certain type
+    optionalArrayOf: PropTypes.arrayOf(PropTypes.number),
+
+    // An object with property values of a certain type
+    optionalObjectOf: PropTypes.objectOf(PropTypes.number),
+
+    // An object taking on a particular shape
+    optionalObjectWithShape: PropTypes.shape({
+        color: PropTypes.string,
+        fontSize: PropTypes.number
+    }),
+
+    // You can chain any of the above with `isRequired` to make sure a warning is shown if the prop isn't provided.
+    requiredFunc: PropTypes.func.isRequired,
+
+    // A value of any data type
+    requiredAny: PropTypes.any.isRequired,
+
+    // You can also specify a custom validator. It should return an Error object if the validation fails. Don't `console.warn` or throw, as this won't work inside `oneOfType`.
+    customProp: function(props, propName, componentName) {
+        if (!/matchme/.test(props[propName])) {
+        return new Error(
+            'Invalid prop `' + propName + '` supplied to' +
+            ' `' + componentName + '`. Validation failed.'
+        );
+        }
+    },
+
+    // You can also supply a custom validator to `arrayOf` and `objectOf`.
+    // It should return an Error object if the validation fails. The validator will be called for each key in the array or object. The first two arguments of the validator are the array or object itself, and the current item's key.
+    customArrayProp: PropTypes.arrayOf(function(propValue, key, componentName, location, propFullName) {
+        if (!/matchme/.test(propValue[key])) {
+        return new Error(
+            'Invalid prop `' + propFullName + '` supplied to' +
+            ' `' + componentName + '`. Validation failed.'
+        );
+        }
+    })
+    };
+
+
+
+
+Sample from Create React Start Script:
+-----------------------------------------------------
+"scripts": {
+  "start": "npm-run-all -p watch-css start-js",
+  "build": "npm run build-css && react-scripts build",
+  "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+  "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+  "start-js": "react-scripts start"
+},
+
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+REACT REVIEW
+https://www.tutorialspoint.com/reactjs/reactjs_jsx.htm
+* If you want to add custom attributes, you must prefix them with `data-`, e.g. `data-myattributes`
+* cannot use `if...else`, must use ternary operators e.g. condition ? true : false
+* You can setup type validations _and_ default values with PropTypes
+    * see: https://www.tutorialspoint.com/reactjs/reactjs_props_validation.htm
+* Lifecycle methods:
+    * componentWillMount = before rendering, both server & client side
+    * componentDidMount = once after first render on client side. AJAX and DOM updates should be here. Also integrated w/ setTimeout/setInterval
+    * componentWillReceiveProps = invoked after prop updated before new render
+    * shouldComponentUpdate = returns true or false. determines if component should update.
+    * componentWillUpdate = called just before rendering
+    * componentDidUpdate = called just after rendering
+    * componentWillUnmount = called after component is unmounted from DOM. Tear down intervals/timeouts here.
+
+
+ROUTER (OUT OF DATE)
+https://www.tutorialspoint.com/reactjs/reactjs_router.htm
+* THIS IS ALL OUT OF DATE DON'T BELIEVE IT
+* install
+    npm install react-router
+* Example: four components, three of which are rendered once the route has changed
+    app = tab menu
+    home
+    about
+    contact
+* Example code:
+    import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
+
+    (App returns list of nav tabs and `this.props.children`)
+    (other components just render their respective "pages")
+* Add a router
+    * This router will be rendered, and we set components for each route
+    * Example
+        ReactDOM.render((
+            <Router history = {browserHistory}>
+                <Route path = "/" component = {App}>
+                    <IndexRoute component = {Home}/>
+                    <Route path = "home" component = {Home} />
+                    <Route path = "about" component = {About} />
+                    <Route path = "contact" component = {Contact} />
+                </Route>
+            </Router>
+        ), document.getElementById('app'));
+        ))
+* THIS IS ALL OUT OF DATE DON'T BELIEVE IT
+
+
+ROUTER (UP TO DATE)
+https://reacttraining.com/react-router/web/guides/quick-start
+* Basic Quickstart Example
+    import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+
+    function Index() {
+        return <h2>Home</h2>
+    }
+
+    function About() {
+        return <h2>About</h2>
+    }
+
+    function Users() {
+        return <h2>Users</h2>
+    }
+
+    function AppRouter() {
+        return (
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/">About</Link>
+                            </li>
+                            <li>
+                                <Link to="/">Users</Link>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <Route path="/" exact component={Index} />
+                    <Route path="/about/" exact component={About} />
+                    <Route path="/users/" exact component={Users} />
+                </div>
+            </Router>
+        );
+    }
+
+    export default AppRouter;
+* Nested Example:
+    import React from "react";
+    import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+    function App() {
+    return (
+        <Router>
+        <div>
+            <Header />
+
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/topics" component={Topics} />
+        </div>
+        </Router>
+    );
+    }
+
+    function Home() {
+    return <h2>Home</h2>;
+    }
+
+    function About() {
+    return <h2>About</h2>;
+    }
+
+    function Topic({ match }) {
+    return <h3>Requested Param: {match.params.id}</h3>;
+    }
+
+    function Topics({ match }) {
+    return (
+        <div>
+        <h2>Topics</h2>
+
+        <ul>
+            <li>
+            <Link to={`${match.url}/components`}>Components</Link>
+            </li>
+            <li>
+            <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
+            </li>
+        </ul>
+
+        <Route path={`${match.path}/:id`} component={Topic} />
+        <Route
+            exact
+            path={match.path}
+            render={() => <h3>Please select a topic.</h3>}
+        />
+        </div>
+    );
+    }
+
+    function Header() {
+    return (
+        <ul>
+        <li>
+            <Link to="/">Home</Link>
+        </li>
+        <li>
+            <Link to="/about">About</Link>
+        </li>
+        <li>
+            <Link to="/topics">Topics</Link>
+        </li>
+        </ul>
+    );
+    }
+
+    export default App;
+* Basic components
+    * Three types
+        * Router
+        * Route matching
+        * Navigation
+    * Router = core of project
+        * two extra types which create specialized history object for you
+            * BrowserRouter --> server responds to requests
+            * HashRouter --> static file server
+    * Route Matching = two types; <Route> and <Switch>
+        * compares <Route>'s path prop to current location's pathname
+        * <Switch> is used to group routes together
+            * not required but useful
+            * iterate over and match first occurence
+            * can help with transitions
+            * can path to 404 if needed
+    * Route rendering props
+        * Three choices for a given <Route> component:
+            * component
+            * render
+            * children (rarely used)
+        * component -> use w/ existing component
+        * render -> takes inline function, use when you have to pass in-scope variables to component
+        * you should not use component prop w/ inline function to pass in-scope variables
+        * examples:
+            <Route exact path="/" component={Home} />
+            <Route path="/about" render={props => <About {...props} extra={someVariable} />}
+    * Navigation
+        * <Link> -> create links in your app -> <a>
+        * <NavLink> -> special type that can style itself as "active" when its `to` prop matches the current location
+        * <Redirect> -> forces navigation when it renders
+* Full API
+    * <Router>
+        * low-level version typically only used if you need to customize stuff or integrate it with another library
+        * <BrowserRouter> is fine for most circumstances
+    * <Route>
+        * Renders when location matches route path
+        * Three ways to render
+            * component = name a component to render
+            * render = inline function to pass props to a component
+            * children (rarely used)
+        * All render methods will be passed the same three route props
+                * match
+                * location
+                * history
+            * match
+                * object that contains info about how a <Route path> matched the URL
+                * properties:
+                    params (object) = key/value pairs parsed from the URL corresponding the dynamic segments of the path
+                    isExact (boolean) = if the entire URL was matched
+                    path (string) = the path pattern used to match, useful for nested routes
+                    url (string) = matched portion of the URL, useful for nested links
+                * access with...
+                    * Route component -> this.props.match
+                    * Route render -> ({ match }) => ()
+                    * Route children -> ({ match }) => ()
+                    * withRouter -> this.props.match
+                    * matchPath -> the return value
+                * no path (always matches) -> returns closest parent match
+                * Example: `${match.url}/relative-path`;
+            * location
+                * represents where app is now, where you want it to go, or even where is was
+                * access with...
+                    * Route component -> this.props.location
+                    * Route render -> ({ location }) => ()
+                    * Route children -> ({ location }) => ()
+                    * withRouter -> this.props.location
+            * history
+                * basically, the browser history
+                * for more info, see: https://reacttraining.com/react-router/web/api/history
+        * component = component to render when route path matched
+            * given all route props (match, location, history)
+        * render = function to render component with props
+            * receives the same three route props, in addition to anything else you send
+    * <Link>
+        * Creates links for your application
+        * `to`
+            * string -> the location to link to
+            * object -> object with pathname, search, hash, or state
+
+
+REACT ROUTER WITH REDUX
+https://reacttraining.com/react-router/web/guides/redux-integration
+(useful info here!)
+
+
+CSS TRANSITIONS
+https://www.tutorialspoint.com/reactjs/reactjs_animations.htm
+* may be useful later when dealing with cards
+* can be used when components are mounted/unmounted
+
+
+FLUX
+https://www.tutorialspoint.com/reactjs/reactjs_flux_concept.htm
+* Flux = programming concept where data is uni-directional (enter and flow in one directional until rendering)
+* Flux elements:
+    * Actions = sent to dispatcher to trigger data flow
+    * Dispatcher = central hub, dispatches/sends to stores
+    * Store = where application state and logic are held
+    * View = receives data from store and re-render the app
+
+USING FLUX
+https://www.tutorialspoint.com/reactjs/reactjs_using_flux.htm
+* Implementing the Flux pattern with the "Redux" framework
+* Install Redux
+    npm install --save react-redux
+* Create directories
+    /actions
+    /components
+    /reducers
+* Example files
+    /actions/actions.js
+    /reducers/reducers.js
+    /components/AddTodo.js
+    /components/Todo.js
+    /components/TodoList.js
+* Actions: JS objects that use `type` property to inform about the data that should be sent to the store.
+    * Only trigger changes in the app
+    * Example:
+        export const ADD_TODO = 'ADD_TODO'
+
+        let nextTodoId = 0;
+
+        export function addTodo(text) {
+            return {
+                type: ADD_TODO,
+                id: nextTodoId++,
+                text
+            };
+        }
+* Reducers: specify changes to the app (triggered by Actions). Takes two params (state & action) to calculate and return an updated state.
+    * Example:
+        import { combineReducers } from 'redux'
+        import { ADD_TODO } from '../actions/actions'
+
+        function todo(state, action) {
+            switch (action.type) {
+                case ADD_TODO:
+                    return {
+                        id: action.id,
+                        text: action.text,
+                    }
+                default:
+                    return state
+            }
+        }
+        function todos(state = [], action) {
+            switch (action.type) {
+                case ADD_TODO:
+                    return [
+                        ...state,
+                        todo(undefined, action)
+                    ]
+                default:
+                    return state
+            }
+        }
+        const todoApp = combineReducers({
+            todos
+        })
+        export default todoApp
+* Store: holds the app's state. Easy to create once you have reducers. Passing store property to provider element, which wraps our route component.
+    * Example
+        import React from 'react'
+
+        import { render } from 'react-dom'
+        import { createStore } from 'redux'
+        import { Provider } from 'react-redux'
+
+        import App from './App.jsx'
+        import todoApp from './reducers/reducers'
+
+        let store = createStore(todoApp)
+        let rootElement = document.getElementByID('app')
+
+        render(
+            <Provider store = {store}>
+            </Provider>
+        )
+* Root: the `App` component is the _root component_ of the app. Only the root component should be aware of a redux.
+    * connect: function to connect root App to the store
+    * Example:
+        import React, { Component } from 'react'
+        import { connect } from 'react-redux'
+        import { addTodo } from './actions/actions'
+
+        import AddTodo from './components/AddTodo.js'
+        import TodoList from './components/TodoList.js'
+
+        class App extends Component {
+            render() {
+                const { dispatch, visibleTodos } = this.props
+
+                render (
+                    <div>
+                        <AddTodo onAddClick = {text => dispatch(addTodo(text))} />
+                        <TodoList todos = {visibleTodos}/>
+                    </div>
+                )
+            }
+        }
+        function select(state) {
+            return {
+                visibleTodos: state.todos
+            }
+        }
+        export default connect(select)(App);
+* Other components: shouldn't be aware of redux
+    // components/AddTodo.js
+
+    export default class AddTodo extends Component {
+        render() {
+            return (
+                <div>
+                    <input type = 'text' ref = 'input' />
+                    <button onClick = {(e) => this.handleClick(e)}>
+                        Add
+                    </button>
+                </div>
+            )
+        }
+        handleClick(e) {
+            const node = this.refs.input
+            const text = node.value.trim()
+            this.props.onAddClick(text)
+            node.value = ''
+        }
+    }
+
+
+================================================
+================================================
+================================================
+
+REDUX
+https://redux.js.org/faq/general#when-should-i-use-redux

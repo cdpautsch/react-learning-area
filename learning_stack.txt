@@ -1,0 +1,131 @@
+LEARNING STACK STUFF
+===========================================================
+===========================================================
+===========================================================
+
+SASS + REACT/WEBPACK/BABEL
+===========================================================
+https://sass-lang.com/
+* SASS has a pure JS library that's just a little slower
+
+https://www.codementor.io/valentinrad/roll-your-own-tiny-react-environment-using-webpack-babel-and-sass-ei70wyhjl
+* Install packages
+    * creates style tags from JS strings
+        npm install style-loader
+    * translates CSS into JS strings
+        npm intall css-loader
+    * translates SASS into CSS
+        npm install sass-loader
+    * SASS compiler used by the loader above
+        npm install node-sass
+* Update webpack config:
+    {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+    }
+    NOTE: we should _NOT_ use style-loader because we do not want to use inline styles _ever_
+* Import SASS into `app.js`
+    import './App.scss'
+
+
+https://medium.com/@joshuacrass/react-scss-and-webpack-ae9bd84b9e43
+* Add packages
+    npm install sass-loader node-sass
+* Update webpack
+    {
+        loader: 'sass-loader',
+        options: {
+            sourceMap: true,
+        },
+    },
+* Optional sourceMap def: sourceMap: process.env.NODE_ENV !== 'production'
+* Import
+    import style from './app/scss';
+* Add class:
+    className={style.sassyDiv}
+* Add SASS Linter
+    npm install sass-lint
+
+
+http://blog.marcnuri.com/react-babel-webpack-sass-application/
+* NPM install:
+    npm install --save-dev mini-css-extract-plugin css-loader sass-loader node-sass
+* Packages:
+    mini-css-extract-plugin = extracts all generated CSS into single file
+    css-loader = css modules and resolving styles
+    sass-loader & node-sass = SCSS preprocessing & compiling
+* Update webpack config:
+    {
+        test: /\.(scss|sass|css)$/,
+        exclude: /node_modules/,
+        loaders: [
+            MiniCssExtractPlugin.loader,
+            {
+                loader: 'css-loader',
+                options: {
+                    modules: true,
+                    sourceMap: true,
+                    importLoaders: 1,
+                    localIdentName: '[local]___[hash:base64:5]'
+                }
+            },
+        'sass-loader',
+        ]
+    },
+
+    ...
+
+    new MiniCssExtractPlugin({
+        filename: devMode ? '[name].css' : '[name].[hash].css',
+        chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+    })
+* File structure
+    /src
+        /styles
+            /partials
+                _base.scss
+                _mixins.scss
+                _variables.scss
+            main.scss
+* Import into JS
+    import styles from './styles/main.scss';
+* 
+
+
+
+
+
+MODULAR CSS
+======================================
+https://medium.com/@pioul/modular-css-with-react-61638ae9ea3e
+* ?
+
+
+https://www.reddit.com/r/javascript/comments/94ag8r/what_is_the_best_way_to_style_react_components/
+
+
+
+
+
+
+
+
+
+LINTING
+========================================
+ESLint
+https://medium.com/@joshuacrass/javascript-linting-and-formatting-with-eslint-prettier-and-airbnb-30eb746db862
+* What is it?
+
+https://www.reddit.com/r/reactjs/comments/beiys2/what_are_the_eslint_plugins_you_use_for_your/
+* ???
+
+
+
+FILE/IMAGE LOADING
+=================================================
+https://www.codementor.io/valentinrad/roll-your-own-tiny-react-environment-using-webpack-babel-and-sass-ei70wyhjl
+* Needed to load images and add it to our bundle
+* Use:
+    npm install file-loader
+    npm install url-loader

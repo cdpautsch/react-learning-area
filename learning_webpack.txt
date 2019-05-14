@@ -1,0 +1,67 @@
+LEARNING WEBPACK
+===================================================
+(see `learning_babel.txt` for combined tutorials which include webpack)
+https://webpack.js.org/
+https://webpack.js.org/guides/getting-started
+https://webpack.js.org/concepts/
+
+* Bundle everything
+    npx webpack
+    npx webpack --config webpack.config.js
+
+* Config
+    * Entry = start/top of the dependency graph
+        * Multiple entry points can be chosen
+    * Output = target of output and how to name them
+        * default to `./dist/main.js` for main output file and `./dist` for all other files
+    * Loaders = do input/output for other files Webpack doesn't understand
+        * test = the file(s) to be transformed
+        * use = which loader should be used to do the transforming
+    * Plugins = can do wider array of tasks
+        * example:
+            new HtmlWebpackPlugin({template: './src/index.html'})
+    * Mode = optimizations for each environment; `development`, `production`, `none`
+        * default is prod
+
+
+
+EXAMPLE (from `learning_babel.txt`):
+    const webpack = require('webpack');
+
+    module.exports = {
+        entry: './src/index.js',
+        module: {
+            rules: [
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: ['babel-loader']
+                }
+            ]
+        },
+        resolve: {
+            extensions: ['*', '.js', '.jsx']
+        },
+        output: {
+            path: __dirname + '/dist',
+            publicPath: '/',
+            filename: 'bundle.js'
+        },
+        plugins: [
+            new webpack.HotModuleReplacementPlugin()
+        ],
+        devServer: {
+            contentBase: './dist',
+            hot: true
+        }
+    };
+
+
+DEV SERVER
+===========================
+http://blog.marcnuri.com/react-babel-webpack-sass-application/
+  devServer: {
+    contentBase: DIST_DIR,
+    hot: true,
+    port: 9000
+  }
