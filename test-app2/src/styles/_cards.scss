@@ -16,10 +16,6 @@
         margin: $global-margin;
         min-width: 5rem;
         height: 8rem;
-        border-width: 2px;
-        border-style: solid;
-        border-radius: $global-radius;
-        cursor: pointer;
 
         &.face-up {
             border-color: $Teal;
@@ -39,13 +35,17 @@
             cursor: auto;
         }
 
-        &.unflippable, &.unflippable:hover {
-            color: $Grey;
+        &.removed, &.removed:hover {
+            border-style: dashed;
+            border-color: $MedGrey;
+            background: lighten($LightGrey,15%);
+            color: $MedGrey;
             cursor: not-allowed;
         }
-
-        &.removed {
-            display: none;
-        }
     }
+}
+
+.conclusion {
+    text-align: center;
+    line-height: 4rem;
 }

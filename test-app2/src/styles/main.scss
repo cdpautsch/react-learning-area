@@ -55,3 +55,15 @@ div.color-bar {
     background: $DarkBlue;
     height: 0.5rem;
 }
+
+button {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: $global-radius;
+    border-color: $AltGrey;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $Grey;
+    }
+}

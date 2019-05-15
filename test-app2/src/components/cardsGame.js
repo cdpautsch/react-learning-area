@@ -24,6 +24,15 @@ function Card(props) {
     );
 }
 
+function Conclusion(props) {
+    return (
+        <div className="card conclusion">
+            <p>{props.result}</p>
+            <button onClick={props.onClick}>Play Again</button>
+        </div>
+    )
+}
+
 class CardsDeck extends React.Component {
     constructor(props) {
         super(props);
@@ -61,21 +70,27 @@ class CardsGame extends React.Component {
         super(props);
         this.state = {
             cardArray: ["Up","Down","Down","Up","Up"]
+            // cardArray: Array(7).fill(null)
         }
 
         this.handleClick = this.handleClick.bind(this);
+        this.resetCards = this.resetCards.bind(this);
+
+        //this.initializeCards();
     }
 
-    initializeCards() {
+    resetCards() {
+        this.setState({
+            cardArray: ["Up","Down","Down","Up","Up"]
+        });
     }
 
     handleClick(i) {
         // Removes a card
 
         const cardArray = this.state.cardArray.slice();
-        const status = cardArray[i];
 
-        if (status !== "Up") {
+        if (cardArray[i] !== "Up") {
             return;
         }
 
@@ -83,24 +98,66 @@ class CardsGame extends React.Component {
 
         // Flip Left Card
         if (i > 0) {
+            // for (let n=i-1; n>=0; n--) {
+            //     if (cardArray[n] !== "Removed") {
+            //         this.flipCard(n,cardArray);
+            //         break;
+            //     }
+            // }
+
             this.flipCard(i-1,cardArray);
         }
 
         // Flip Right Card
         if (i < numCards-1) {
+            // for (let n=i+1; n<numCards; n++) {
+            //     if (cardArray[n] !== "Removed") {
+            //         this.flipCard(n,cardArray);
+            //         break;
+            //     }
+            // }
+
             this.flipCard(i+1,cardArray);
         }
         
         // Remove Selected Card
-        const splicedArray = cardArray.slice(0,i).concat(cardArray.slice(i+1,numCards));
+        // const splicedArray = cardArray.slice(0,i).concat(cardArray.slice(i+1,numCards));
+        cardArray[i] = "Removed";
 
         this.setState({
-            cardArray: splicedArray
+            //cardArray: splicedArray
+            cardArray: cardArray
         });
     }
 
     flipCard(index,cardArray) {
-        cardArray[index] = cardArray[index] === "Down" ? "Up" : "Down";
+        if (cardArray[index] !== "Removed") {
+            cardArray[index] = cardArray[index] === "Down" ? "Up" : "Down";
+        }
+    }
+
+    determineWin() {
+        // if (this.state.cardArray.length == 0) {
+        //     return (<Conclusion result="You Won!" onClick={this.resetCards} />);
+        // }
+        // else if (this.state.cardArray.includes("Up") == false) {
+        //     return (<Conclusion result="You lost! No more viable moves." onClick={this.resetCards} />);
+        // }
+        // else {
+        //     return null;
+        // }
+
+        if (this.state.cardArray.includes("Up") == false) {
+            if (this.state.cardArray.includes("Down") == false) {
+                return (<Conclusion result="You Won!" onClick={this.resetCards} />);
+            }
+            else {
+                return (<Conclusion result="You lost! No more viable moves." onClick={this.resetCards} />);
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     render() {
@@ -117,6 +174,7 @@ class CardsGame extends React.Component {
                     cardArray={cardArray}
                     onClick={(i) => this.handleClick(i)}
                 />
+                {this.determineWin()}
             </div>
         )
     }
