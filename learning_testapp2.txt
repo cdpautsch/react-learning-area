@@ -115,6 +115,7 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
         if (module.hot) {
             module.hot.accept();
         }
+        TODO: is this actually legit? How do we get HMR running?
 9.  update `package.json`:
         ...
         "keywords": [],
@@ -129,11 +130,15 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
         "devDependencies": {
         ...
 11. create react code or whatever
-15. import into JS
+15. import SCSS into JS
         import styles from './styles/main.scss';
+        (this is needed so that Webpack recognizes the dependency)
 XX. start it up
         npm start
         (access at `localhost:8080`)
+
+
+NOTES FOR THE FUTURE:
 
 
 
@@ -231,26 +236,6 @@ XX. start it up
 
 
 
-TENTATIVE???
-------------
-9.  create `babel.config.js`:
-        const presets = [
-            [
-                "@babel/env",
-                {
-                    targets: {
-                        edge: "17",
-                        firefox: "60",
-                        chrome: "67",
-                        safari: "11.1",
-                    },
-                    useBuiltIns: "usage",
-                },
-            ],
-        ];
-
-        module.exports = { presets };
-
 
 
 
@@ -265,118 +250,3 @@ TEMPORARY STORAGE
 ===========================================================================
 ===========================================================================
 
-
-import React from 'react';
-
-function Card(props) {
-   return (
-        <button
-            className="card"
-            type="button"
-            onClick={props.onClick}
-        >
-            {props.status}
-        </button>
-    );
-}
-
-class CardsDeck extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    renderCard(status, index) {
-        return (
-            <Card
-                status={status}
-                key={index.toString()}
-                onClick={() => this.props.onClick(index)}
-            />
-        );
-    }
-
-    render() {
-        console.log(this.props.cardArray);
-        console.log(typeof(this.props.cardArray));
-        console.log(this.props.cardArray[1]);
-        console.log(this.props.cardArray.length);
-
-        const cardArray = this.props.CardArray.slice();
-
-        console.log(cardArray);
-        console.log(typeof(cardArray));
-        console.log(cardArray[1]);
-        console.log(cardArray.length);
-        
-        //const testArray = ["Up","Down","Down","Up","Up"];
-        const cardList = cardArray.map((status, index) =>
-            this.renderCard(status, index)
-        );
-
-        return (
-            <div className="cards-deck">
-                {cardList}
-            </div>
-        );
-    }
-}
-
-class CardsGame extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            cardArray: Array(7).fill(null)
-        }
-        this.initializeCards();
-    }
-
-    initializeCards() {
-        // for (let i=0; i < this.state.cardArray.length; i++) {
-        //     this.state.cardArray[i] = {
-        //         cardNumber: Math.floor(Math.random()*12) + 1,
-        //         isFaceUp: Math.floor(Math.random()*2) === 1 ? true : false,
-        //         isRemoved: false
-        //     }
-        // }
-        
-        for (let i=0; i < this.state.cardArray.length; i++) {
-            this.state.cardArray[i] = Math.floor(Math.random()*2) === 1 ? "Up" : "Down";
-        }
-
-        console.log(this.state.cardArray);
-    }
-
-    handleClick(i) {
-        const cardArray = this.state.cardArray.slice();
-        cardArray[i] = "Removed";
-
-        this.setState({
-            cardArray: cardArray
-        })
-    }
-
-    render() {
-        const cardArray = this.state.cardArray;
-        const testArray = ["Up","Down","Down","Up","Up"];
-
-        console.log(testArray);
-        console.log(typeof(testArray));
-        console.log(testArray[1]);
-        console.log(testArray.length);
-
-        return (
-            <div className="cardsGame content">
-                <div className="game-intro">
-                    <h2>Cards Problem</h2>
-                    <p>This challenge is about a simple card flipping solitaire game. You're presented with a sequence of cards, some face up, some face down. You can remove any face up card, but you must then flip the adjacent cards (if any). The goal is to successfully remove every card. Making the wrong move can get you stuck.</p>
-                </div>
-                <div className="color-bar"></div>
-                <CardsDeck
-                    cardArray={testArray}
-                    onClick={(i) => this.handleClick(i)}
-                />
-            </div>
-        )
-    }
-}
-export default CardsGame;

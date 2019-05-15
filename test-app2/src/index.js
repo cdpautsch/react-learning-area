@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 // import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router';
 import { BrowserRouter, Route, Link } from "react-router-dom"
 
-import CardsGame from './components/cardsGame';
+import CardsGame from './components/cards/cardsGame';
 
 import './styles/main.scss';
 
