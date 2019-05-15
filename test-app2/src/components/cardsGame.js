@@ -38,9 +38,9 @@ class CardsDeck extends React.Component {
         super(props);
     }
 
-    renderCards(tempArray) {
+    renderCards(cardArray) {
         return (
-            tempArray.map((status,index) => {
+            cardArray.map((status,index) => {
                 return (
                     <Card
                         status={status}
@@ -53,9 +53,9 @@ class CardsDeck extends React.Component {
     }
 
     render() {
-        const tempArray = this.props.cardArray;
+        const cardArray = this.props.cardArray;
 
-        const renderedArray = this.renderCards(tempArray);
+        const renderedArray = this.renderCards(cardArray);
 
         return (
             <div className="cards-deck">
@@ -65,29 +65,92 @@ class CardsDeck extends React.Component {
     }
 }
 
+class CardsInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.onSelectChange(e.target.value);
+    }
+
+    renderOptions() {
+        const optionList = Array(6).fill(null);
+
+        for (let i=0; i < 6; i++) {
+            optionList[i] = i+5;
+        }
+
+        return (
+            optionList.map((number) => {
+                return (
+                    <option
+                        key={number}
+                        value={number}
+                    >
+                        {number}
+                    </option>
+                )
+            })
+        )
+    }
+
+    render() {
+        const renderedArray = this.renderOptions();
+        const numCards = this.props.numCards;
+
+        return (
+            <div className="cards-input">
+                <p>Select the number of cards to play with:</p>
+                <select
+                    value={numCards}
+                    onChange={this.handleChange}
+                >
+                    {renderedArray}
+                </select>
+            </div>
+        )
+    }
+}
+
 class CardsGame extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cardArray: ["Up","Down","Down","Up","Up"]
-            // cardArray: Array(7).fill(null)
+            numCards: 5,
+            cardArray: this.initializeCards(5)
         }
 
-        this.handleClick = this.handleClick.bind(this);
+        this.handleRemoveCard = this.handleRemoveCard.bind(this);
         this.resetCards = this.resetCards.bind(this);
-
-        //this.initializeCards();
+        this.handleNumCardChange = this.handleNumCardChange.bind(this);
     }
 
-    resetCards() {
+    handleNumCardChange(newNumCards) {
         this.setState({
-            cardArray: ["Up","Down","Down","Up","Up"]
+            numCards: newNumCards,
+            cardArray: this.initializeCards(newNumCards),
         });
     }
 
-    handleClick(i) {
-        // Removes a card
+    initializeCards(length) {
+        const newArray = Array(length).fill(null);
+        for (let i=0; i < length; i++) {
+            newArray[i] = Math.floor(Math.random()*2) === 1 ? "Up" : "Down";
+        }
+        return newArray;
+    }
 
+    resetCards() {
+        const numCards = this.state.numCards;
+
+        this.setState({
+            cardArray: this.initializeCards(numCards)
+        });
+    }
+
+    handleRemoveCard(i) {
         const cardArray = this.state.cardArray.slice();
 
         if (cardArray[i] !== "Up") {
@@ -137,16 +200,6 @@ class CardsGame extends React.Component {
     }
 
     determineWin() {
-        // if (this.state.cardArray.length == 0) {
-        //     return (<Conclusion result="You Won!" onClick={this.resetCards} />);
-        // }
-        // else if (this.state.cardArray.includes("Up") == false) {
-        //     return (<Conclusion result="You lost! No more viable moves." onClick={this.resetCards} />);
-        // }
-        // else {
-        //     return null;
-        // }
-
         if (this.state.cardArray.includes("Up") == false) {
             if (this.state.cardArray.includes("Down") == false) {
                 return (<Conclusion result="You Won!" onClick={this.resetCards} />);
@@ -170,9 +223,11 @@ class CardsGame extends React.Component {
                     <p>This challenge is about a simple card flipping solitaire game. You're presented with a sequence of cards, some face up, some face down. You can remove any face up card, but you must then flip the adjacent cards (if any). The goal is to successfully remove every card. Making the wrong move can get you stuck.</p>
                 </div>
                 <div className="color-bar"></div>
+                <CardsInput onSelectChange={this.handleNumCardChange} />
+                <div className="color-bar"></div>
                 <CardsDeck
                     cardArray={cardArray}
-                    onClick={(i) => this.handleClick(i)}
+                    onClick={(i) => this.handleRemoveCard(i)}
                 />
                 {this.determineWin()}
             </div>

@@ -70,6 +70,7 @@ module.exports = {
         contentBase: './dist',
         inline: true,
         hot: true,
-        historyApiFallback: true
+        historyApiFallback: true,
+        port: 8713
     }
 };

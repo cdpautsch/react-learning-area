@@ -8,6 +8,15 @@
     }
 }
 
+.cards-input {
+    text-align: center;
+
+    p {
+        display: inline-block;
+        margin-right: $global-margin;
+    }
+}
+
 .cards-deck {
     text-align: center;
 
