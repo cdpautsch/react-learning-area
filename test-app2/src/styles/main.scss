@@ -1,8 +1,57 @@
 @import '_theme.scss';
 @import '_variables.scss';
+@import '_cards.scss';
+
+body {
+    background: $OffWhite;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+h1, h2, h3, h4 {
+    letter-spacing: 1px;
+    margin: 0.5rem 0.5rem 0.5rem 1rem;
+}
+
+.content {
+    display: block;
+    border: 2px solid $DarkBlue;
+    margin: $global-margin;
+    border-radius: $global-radius;
+    background: $White;
+}
 
 .navbar {
-    border: 1px solid black;
-    padding: $global-padding;
-    margin: $global-margin;
+    margin-bottom: 1rem;
+}
+
+.home {
+    * {
+        margin: $global-margin * 2;
+    }
+}
+
+.topbar {
+    text-align: center;
+
+    a {
+        margin: 0.5rem;
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        background: $DarkBlue;
+        color: $White;
+        border-radius: $global-radius;
+        text-decoration: none;
+        border: 2px solid $DarkBlue;
+
+        &:hover {
+            background: $White;
+            color: $DarkBlue;
+        }
+    }
+}
+
+div.color-bar {
+    display: block;
+    background: $DarkBlue;
+    height: 0.5rem;
 }

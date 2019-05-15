@@ -1,0 +1,51 @@
+.game-intro, .cards-deck {
+    margin: 0.75rem;
+}
+
+.game-intro {
+    p {
+        font-size: 0.875rem;
+    }
+}
+
+.cards-deck {
+    text-align: center;
+
+    .card {
+        display: inline-block;
+        margin: $global-margin;
+        min-width: 5rem;
+        height: 8rem;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: $global-radius;
+        cursor: pointer;
+
+        &.face-up {
+            border-color: $Teal;
+            background: $OffWhite;
+            color: $Black;
+
+            &:hover {
+                background: $Teal;
+                color: $White;
+            }
+        }
+
+        &.face-down {
+            border-color: darken($Teal, 10%);
+            background: darken($VeryLightGrey,5%);
+            color: darken($VeryLightGrey,5%);
+            cursor: auto;
+        }
+
+        &.unflippable, &.unflippable:hover {
+            color: $Grey;
+            cursor: not-allowed;
+        }
+
+        &.removed {
+            display: none;
+        }
+    }
+}

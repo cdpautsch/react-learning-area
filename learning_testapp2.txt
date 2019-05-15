@@ -5,25 +5,85 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
 1.  create directory
 2.  initialize for npm
         npm init -y
-3.  add other directories
+3.  add directories & base files
         /src
+            /styles
+            /components
+            index.js
+            index.html
         /dist
-4.  add base files
-        /src/index.js
-        /dist/index.html
-5.  install webpack
-        npm install --save-dev webpack webpack-dev-server webpack-cli
+
+        (index.html will be used as a template, you do not need to import any other files)
+5.  install packages
+        webpack
+            npm install --save-dev webpack webpack-dev-server webpack-cli
+        babel
+            npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
+        webpack plugins
+            npm install --save-dev html-webpack-plugin mini-css-extract-plugin clean-webpack-plugin
+        react
+            npm install react react-dom react-router-dom
+            npm install --save-dev prop-types
+        sass
+            npm install --save-dev css-loader sass-loader node-sass
 6.  create `webpack.config.js`:
         const webpack = require('webpack');
+        const HtmlWebpackPlugin = require('html-webpack-plugin');
+        const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+        const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+        const devMode = process.env.NODE_ENV !== 'production';
+        const SRC_DIR = __dirname + '/src';
+        const DIST_DIR = __dirname + '/dist';
 
         module.exports = {
-            entry: './src/index.js',
+            entry: SRC_DIR + '/index.js',
+            plugins: [
+                new webpack.HotModuleReplacementPlugin(),
+                new HtmlWebpackPlugin({
+                    template: SRC_DIR + '/index.html',
+                    filename: './index.html'
+                }),
+                new MiniCssExtractPlugin({
+                    //filename: devMode ? '[name].css' : '[name].[hash].css',
+                    //chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
+                    filename: '[name].css',
+                    chunkFilename: '[id].css'
+                }),
+                new CleanWebpackPlugin()
+            ],
             module: {
                 rules: [
                     {
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,
                         use: ['babel-loader']
+                    },
+                    {
+                        test: /\.(scss|sass|css)$/,
+                        exclude: /node_modules/,
+                        use: [
+                            MiniCssExtractPlugin.loader,
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    modules: true,
+                                    sourceMap: devMode,
+                                    importLoaders: 1,
+                                    //localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                                    localIdentName: '[local]'
+                                }
+                            },
+                            'sass-loader'
+                        ]
+                    },
+                    {
+                        test: /\.html$/,
+                        exclude: /node_modules/,
+                        use: {
+                            loader: 'html-loader',
+                            options: {minimize: true}
+                        }
                     }
                 ]
             },
@@ -31,27 +91,30 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
                 extensions: ['*', '.js', '.jsx']
             },
             output: {
-                path: __dirname + '/dist',
+                path: DIST_DIR,
                 publicPath: '/',
                 filename: 'bundle.js'
             },
             devServer: {
-                contentBase: './dist'
+                contentBase: './dist',
+                hot: true,
+                historyApiFallback: true
             }
         };
 7.  update `package.json`:
         ...
         "scripts": {
-            "start": "webpack-dev-server --config ./webpack.config.js --mod development",
+            "start": "webpack-dev-server --config ./webpack.config.js --mode development",
             "build": "webpack --mode production",
             ...
         },
         ...
-9.  install babel
-        npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
-        npm install --save-dev html-webpack-plugin ???
-            (or is this webpack?)
-            (is this actually needed?)
+8.  setup HMR
+        (add the following to `index.js`)
+        ...
+        if (module.hot) {
+            module.hot.accept();
+        }
 9.  update `package.json`:
         ...
         "keywords": [],
@@ -65,19 +128,7 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
         },                                   << end
         "devDependencies": {
         ...
-10. install react
-        npm install react react-dom prop-types react-router-dom
 11. create react code or whatever
-12. install SASS
-        npm install css-loader sass-loader node-sass
-13. create SASS directories & files
-        /src/styles
-            _variables.scss
-            main.scss
-            (etc.)
-14. import SASS files into `main.scss`
-        @import '_variables.scss'
-        @import 'variables'
 15. import into JS
         import styles from './styles/main.scss';
 XX. start it up
@@ -201,3 +252,131 @@ TENTATIVE???
         module.exports = { presets };
 
 
+
+
+
+
+
+===========================================================================
+===========================================================================
+===========================================================================
+TEMPORARY STORAGE
+===========================================================================
+===========================================================================
+===========================================================================
+
+
+import React from 'react';
+
+function Card(props) {
+   return (
+        <button
+            className="card"
+            type="button"
+            onClick={props.onClick}
+        >
+            {props.status}
+        </button>
+    );
+}
+
+class CardsDeck extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    renderCard(status, index) {
+        return (
+            <Card
+                status={status}
+                key={index.toString()}
+                onClick={() => this.props.onClick(index)}
+            />
+        );
+    }
+
+    render() {
+        console.log(this.props.cardArray);
+        console.log(typeof(this.props.cardArray));
+        console.log(this.props.cardArray[1]);
+        console.log(this.props.cardArray.length);
+
+        const cardArray = this.props.CardArray.slice();
+
+        console.log(cardArray);
+        console.log(typeof(cardArray));
+        console.log(cardArray[1]);
+        console.log(cardArray.length);
+        
+        //const testArray = ["Up","Down","Down","Up","Up"];
+        const cardList = cardArray.map((status, index) =>
+            this.renderCard(status, index)
+        );
+
+        return (
+            <div className="cards-deck">
+                {cardList}
+            </div>
+        );
+    }
+}
+
+class CardsGame extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            cardArray: Array(7).fill(null)
+        }
+        this.initializeCards();
+    }
+
+    initializeCards() {
+        // for (let i=0; i < this.state.cardArray.length; i++) {
+        //     this.state.cardArray[i] = {
+        //         cardNumber: Math.floor(Math.random()*12) + 1,
+        //         isFaceUp: Math.floor(Math.random()*2) === 1 ? true : false,
+        //         isRemoved: false
+        //     }
+        // }
+        
+        for (let i=0; i < this.state.cardArray.length; i++) {
+            this.state.cardArray[i] = Math.floor(Math.random()*2) === 1 ? "Up" : "Down";
+        }
+
+        console.log(this.state.cardArray);
+    }
+
+    handleClick(i) {
+        const cardArray = this.state.cardArray.slice();
+        cardArray[i] = "Removed";
+
+        this.setState({
+            cardArray: cardArray
+        })
+    }
+
+    render() {
+        const cardArray = this.state.cardArray;
+        const testArray = ["Up","Down","Down","Up","Up"];
+
+        console.log(testArray);
+        console.log(typeof(testArray));
+        console.log(testArray[1]);
+        console.log(testArray.length);
+
+        return (
+            <div className="cardsGame content">
+                <div className="game-intro">
+                    <h2>Cards Problem</h2>
+                    <p>This challenge is about a simple card flipping solitaire game. You're presented with a sequence of cards, some face up, some face down. You can remove any face up card, but you must then flip the adjacent cards (if any). The goal is to successfully remove every card. Making the wrong move can get you stuck.</p>
+                </div>
+                <div className="color-bar"></div>
+                <CardsDeck
+                    cardArray={testArray}
+                    onClick={(i) => this.handleClick(i)}
+                />
+            </div>
+        )
+    }
+}
+export default CardsGame;
