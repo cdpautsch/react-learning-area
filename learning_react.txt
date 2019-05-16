@@ -1562,3 +1562,555 @@ https://www.tutorialspoint.com/reactjs/reactjs_using_flux.htm
 
 REDUX
 https://redux.js.org/faq/general#when-should-i-use-redux
+https://redux.js.org/introduction/getting-started
+
+INTRODUCTION
+------------------------------------------------
+GETTING STARTED
+* Install
+    npm install redux react-redux
+    npm install --save-dev redux-devtools
+* Whole state of app is stored in an object tree inside a single _store_
+    * The only way to change the state tree is to emit an _action_ (an object describing what happened)
+    * To specify how the actions transform the state tree, you write pure _reducers_
+* Example
+        import { createStore } from 'redux'
+
+        /**
+        * This is a reducer, a pure function with (state, action) => state signature.
+        * It describes how an action transforms the state into the next state.
+        *
+        * The shape of the state is up to you: it can be a primitive, an array, an object,
+        * or even an Immutable.js data structure. The only important part is that you should
+        * not mutate the state object, but return a new object if the state changes.
+        *
+        * In this example, we use a `switch` statement and strings, but you can use a helper that
+        * follows a different convention (such as function maps) if it makes sense for your
+        * project.
+        */
+        function counter(state = 0, action) {
+        switch (action.type) {
+            case 'INCREMENT':
+            return state + 1
+            case 'DECREMENT':
+            return state - 1
+            default:
+            return state
+        }
+        }
+
+        // Create a Redux store holding the state of your app.
+        // Its API is { subscribe, dispatch, getState }.
+        let store = createStore(counter)
+
+        // You can use subscribe() to update the UI in response to state changes.
+        // Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
+        // However it can also be handy to persist the current state in the localStorage.
+
+        store.subscribe(() => console.log(store.getState()))
+
+        // The only way to mutate the internal state is to dispatch an action.
+        // The actions can be serialized, logged or stored and later replayed.
+        store.dispatch({ type: 'INCREMENT' })
+        // 1
+        store.dispatch({ type: 'INCREMENT' })
+        // 2
+        store.dispatch({ type: 'DECREMENT' })
+        // 1
+
+CORE CONCEPTS
+* You have an object that represents state:
+        {
+            todos: [{
+                text: 'Eat food',
+                completed: true
+            }, {
+                text: 'Exercise',
+                completed: false
+            }],
+            visibilityFilter: 'SHOW_COMPLETED'
+        }
+* You have other objects (actions) which describe changes to state:
+        { type: 'ADD_TODO', text: 'Go to swimming pool' }
+        { type: 'TOGGLE_TODO', index: 1 }
+        { type: 'SET_VISIBILITY_FILTER', filter: 'SHOW_ALL' }
+* Why? Nobody can change the state arbitrarily, you have set rules about how things can change
+* You write separate reducers to handle parts of the app, then another reducer that manages the complete state of the app by calling reducers for the corresponding state keys
+
+THREE PRINCIPLES
+* Single source of truth
+    * State of whole app is stored in object tree w/in single store
+* State is read-only
+    * Only way to change state is to emit action (object describing what happened)
+* Changes are made w/ pure functions
+    * to specify how state tree is transformed by actions, you write pure reducers
+
+
+BASIC TUTORIAL
+------------------------------------------------
+ACTIONS
+* Actions = payloads of info, send data from app to the store
+* Send with `store.dispatch()`
+* Must have `type` attribute in object (best defined as string constants)
+
+    const ADD_TODO = 'ADD_TODO'
+
+    {
+        type: ADD_TODO,
+        text: 'Build my first Redux app'
+    }
+
+    {
+        type: SET_VISIBILITY_FILTER,
+        filter: SHOW_COMPLETED
+    }
+
+    import { ADD_TODO, REMOVE_TODO } from '../actionTypes'
+
+* Action Creators = functions that create actions
+
+    function addTodo(text) {
+        return {
+            type: ADD_TODO,
+            text
+        }
+    }
+
+* To dispatch an action:
+
+    dispatch(addTodo(text))
+    dispatch(completeTodo(index))
+
+* Alternatively, use a `bound action creator`
+
+    const boundAddTodo = text => dispatch(addTodo(text))
+    ...
+    boundAddTodo(text)
+
+    (can also use `bindActionCreators()`)
+
+* Connect directly to dispatch with `store.dispatch()`
+    * Using `react-redux`: `connect()`
+* Full Example:
+
+    // Action types
+    export const ADD_TODO = 'ADD_TODO`
+
+    // other constants
+    export const visibilityFilter = {
+        SHOW_ALL: 'SHOW_ALL',
+        SHOW_COMPLETED: 'SHOW_COMPLETED'
+    }
+
+    // Action creators
+    export function addTodo(text) {
+        return { type: ADD_TODO, text }
+    }
+
+REDUCERS
+* Reducers = specify how the app's state changes in response to actions sent to the store
+    * Only _what happened_, but not how state changes
+* First: think of state shape
+* Example state:
+    {
+        visibilityFilter: 'SHOW_ALL',
+        todos: [
+            {
+                text: 'Consider using Redux',
+                completed: true
+            },
+            {
+                text: 'Keep all state in a single tree',
+                completed: false
+            }
+        ]
+    }
+* App's state is like a database
+* Reducer pattern:
+    (previousState, action) => newState
+* Must say _pure_
+* You should _never_:
+    * Mutate arguments
+    * Perform side effects like API calls & routing transitions
+    * Call non-pure functions (e.g. `Date.now()` or `Math.random()`)
+* Example
+
+    import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions'
+
+    const initialState = {
+        visibilityFilter: VisibilityFilters.SHOW_ALL,
+        todos: []
+    }
+
+    function todoApp(state = initialState, action) {
+        switch (action.type) {
+            case SET_VISIBILITY_FILTER:
+                return Object.assign({}, state, {
+                    visibilityFilter: action.filter
+                });
+            case ADD_TODO:
+                return Object.assign({}, state, {
+                    todos: [
+                        ...state.todos,
+                        {
+                            text: action.text,
+                            completed: false
+                        }
+                    ]
+                })
+            case TOGGLE_TODO:
+                return Object.assign({}, state, {
+                    todos: state.todos.map((todo, index) => {
+                        if (index === action.index) {
+                            return Object.assign({}, todo, {
+                                completed: !todo.completed
+                            })
+                        }
+                        return todo
+                    })
+                })
+            default:
+                return state;
+        }
+
+        return state;
+    }
+
+* Note: see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign for more info on Object.assign()
+    * Cannot be used alone for deep copies
+    * Deep copy: JSON.parse(JSON.stringify(obj))
+* This is good, but verbose
+    * `todos` and `visibilityFilter` are updated completely independently
+    * you can split them out
+    * specifically, we will split out updating `todos`
+* Example
+
+    function todos(state = [], action) {
+        switch (action.type) {
+            case ADD_TODO:
+                return [
+                    ...state,
+                    {
+                        text: action.text,
+                        completed: false
+                    }
+                ];
+            case TOGGLE_TODO:
+                return state.map((todo,index) => {
+                    if (index === action.index) {
+                        return Object.assign({}, todo, {
+                            completed: !todo.completed
+                        })
+                    }
+                    return todo
+                })
+            default:
+                return state
+        }
+    }
+
+    function todoApp(state = initialState, action) {
+        switch (action.type) {
+            case SET_VISIBILITY_FILTER:
+                return Object.assign({}, state, {
+                    visibilityFilter: action.filter
+                });
+            case ADD_TODO:
+                return Object.assign({}, state, {
+                    todos: todos(state.todos, action)
+                });
+            case TOGGLE_TODO:
+                return Object.assign({}, state, {
+                    todos: todos(state.todos, action)
+                });
+            default:
+                return state;
+        }
+
+        return state;
+    }
+
+* the new `todos()` function deals with only a slice of the state, and it knows only how to update that slice --> _reducer composition_
+* We can also split up visibilityFilter
+* Example
+
+    const { SHOW_ALL } = VisibilityFilters;
+
+    function visibilityFilter(state = SHOW_ALL, action) {
+        switch (action.type) {
+            case SET_VISIBILITY_FILTER:
+                return action.filter;
+            default:
+                return state;
+        }
+    }
+
+* You can then update the main function
+* Example
+
+    function todoApp(state = {}, action) {
+        return {
+            visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+            todos: todos(state.todos, action)
+        }
+    }
+
+* Why?
+    * Now your functions take care of all the state changes, _and_ the initial state!
+    * So you can start with a blank initial state here, pass them nothing, and they'll pass back all the parts you need
+    * Every time there's an action, both will fire, but only one will ever have something to do (usually) and the one that doesn't just returns the original anyway
+* We can also use the utility `combineReducers()`:
+
+    import { combineReducers} from 'redux'
+
+    const todoApp = combineReducers({
+        visibilityFilter,
+        todos
+    })
+
+    export default todoApp
+
+* You can also use some ES6 savvy code to import all the reducers as an object, then give them to `combineReducers` with their names as keys:
+
+    import { combineReducers} from 'redux'
+    import * as reducers from './reducers'
+    const todoApp = combineReducers(reducers)
+
+
+STORE
+* Brings together actions and reducers
+    * hold state
+    * allow access to state via `getState()`
+    * allow state to be updated via `dispatch()`
+    * register listeners via `subscribe(listener)`
+    * handles unregistering listeners via function returned by `subscribe(listener)`
+* Single store in redux app!!
+    * if you wanna split it up, use _reducer composition_
+* Import and pass reducers:
+
+    import { createStore } from 'redux';
+    import todoApp from './reducers';
+    const store = createStore(todoApp);
+
+* You can optionally specify initial state as second argument
+* Next, dispatch events:
+
+    // log initial state
+    console.log(store.getState());
+
+    // log state changes
+    const unsubscribe = store.subscribe(() => console.log(store.getState()));
+
+    // Dispatch some actions
+    store.dispatch(addTodo('Learn about actions'));
+
+    // stop listening
+    unsubscribe();
+
+USAGE WITH REACT
+https://react-redux.js.org/
+* React bindings for Redux separate _presentation_ components from _container_ components
+    * Presentational Components
+        * Purpose = how things look
+        * Aware of Redux = No
+        * To read data = read from props
+        * To change data = invoke callbacks from props
+        * Written = by hand
+    * Container Components
+        * Purpose = how things work
+        * Aware of Redux = yes
+        * To read data = subscribe to Redux state
+        * To change data = dispatch Redux actions
+        * Written = usually generated by React Redux
+* Component Hierarchy
+    * Presentational
+        * TodoList
+        * Todo
+        * Link
+        * Footer
+        * App
+        (these have no dependency on Redux)
+    * Container
+        * VisibleTodoList (filters todos according to current filter, renders a `TodoList`)
+        * FilterLink (gets current filter and renders a `Link`)
+    * Other (sometimes hard to tell what type it is)
+        * AddTodo (input field w/ Add button)
+* Presentation Components Example:
+
+    const Todo = ({ onClick, completed, text }) => (
+        <li
+            onClick={onClick}
+            style={{
+            textDecoration: completed ? 'line-through' : 'none'
+            }}
+        >
+            {text}
+        </li>
+    )
+
+    const TodoList = ({ todos, onTodoClick }) => (
+        <ul>
+            {todos.map((todo, index) => (
+            <Todo key={index} {...todo} onClick={() => onTodoClick(index)} />
+            ))}
+        </ul>
+    )
+
+    const Link = ({ active, children, onClick }) => {
+        if (active) {
+            return <span>{children}</span>
+        }
+
+        return (
+            <a
+                href=""
+                onClick={e => {
+                    e.preventDefault()
+                    onClick()
+                }}
+            >
+                {children}
+            </a>
+        )
+    }
+
+    const Footer = () => (
+        <p>
+            Show: <FilterLink filter={VisibilityFilters.SHOW_ALL}>All</FilterLink>
+            {', '}
+            <FilterLink filter={VisibilityFilters.SHOW_ACTIVE}>Active</FilterLink>
+            {', '}
+            <FilterLink filter={VisibilityFilters.SHOW_COMPLETED}>Completed</FilterLink>
+        </p>
+    )
+
+* Implementing Container Components --> technically they are just a React component that uses `store.subscribe()` to read a part of the Redux state tree and supply props to the presentational component it renders.
+    * Suggest to generate container components w/ React-Redux library `connect()`
+    * To do use `connect()`, you need to define `mapStateToProps` --> describes how to transform Redux store state into props you want to pass to presentational component you are wrapping
+* Example
+
+    const getVisibleTodos = (todos, filter) => {
+        switch (filter) {
+            case 'SHOW_COMPLETED':
+                return todos.filter(t => t.completed)
+            case 'SHOW_ACTIVE':
+                return todos.filter(t => !t.completed)
+            case 'SHOW_ALL':
+            default:
+                return todos
+        }
+    }
+
+    const mapStateToProps = state => {
+        return {
+            todos: getVisibleTodos(state.todos, state.visibilityFilter)
+        }
+    }
+
+* "In addition to reading the state, container components can dispatch actions. In a similar fashion, you can define a function called mapDispatchToProps() that receives the dispatch() method and returns callback props that you want to inject into the presentational component. For example, we want the VisibleTodoList to inject a prop called onTodoClick into the TodoList component, and we want onTodoClick to dispatch a TOGGLE_TODO action:"
+
+    const mapDispatchToProps = dispatch => {
+        return {
+            onTodoClick: id => {
+                dispatch(toggleTodo(id))
+            }
+        }
+    }
+
+* Lastly, create the VisibileTodoList:
+
+    import { connect } from 'react-redux'
+
+    const VisibileTodoList = connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(TodoList)
+
+    export default VisibleTodoList
+
+* So basically...
+
+    TodoList needs `todos` and `onTodoClick`
+
+    `todos` comes from `mapStateToProps`
+
+        `getVisibleTodos` is just a helper function to modify the data from the state on its way to props
+
+    `onTodoClick` comes from `mapDispatchToProps`
+
+    `VisibileTodoList` is the container component
+        it is responsible for passing props down to `TodoList`
+
+* Mixed Presentation/Container Example:
+
+    import React from 'react'
+    import { connect } from 'react-redux'
+    import { addTodo } from '../actions'
+
+    let AddTodo = ({ dispatch }) => {
+        let input
+
+        return (
+            <div>
+            <form
+                onSubmit={e => {
+                e.preventDefault()
+                if (!input.value.trim()) {
+                    return
+                }
+                dispatch(addTodo(input.value))
+                input.value = ''
+                }}
+            >
+                <input
+                ref={node => {
+                    input = node
+                }}
+                />
+                <button type="submit">Add Todo</button>
+            </form>
+            </div>
+        )
+    }
+    AddTodo = connect()(AddTodo)
+
+* Review `refs` at https://reactjs.org/docs/refs-and-the-dom.html
+* Top-level component:
+
+    import React from 'react'
+    import Footer from './Footer'
+    import AddTodo from '../containers/AddTodo'
+    import VisibleTodoList from '../containers/VisibleTodoList'
+
+    const App = () => (
+        <div>
+            <AddTodo />
+            <VisibleTodoList />
+            <Footer />
+        </div>
+    )
+
+    export default App
+
+* Passing the store
+    * All container components need access to Redux store so they can subscribe to it
+    * We can pass them down as props to every container, but that can be tedious
+    * We can use special React Redux `<Provider>` to magically make store available to all container components in app without passing it explicitly
+    * See also: https://reactjs.org/docs/context.html 
+    * Example:
+
+        import React from 'react'
+        import { render } from 'react-dom'
+        import { Provider } from 'react-redux'
+        import { createStore } from 'redux'
+        import todoApp from './reducers'
+        import App from './components/App'
+
+        const store = createStore(todoApp)
+
+        render(
+            <Provider store={store}>
+                <App />
+            </Provider>,
+            document.getElementById('root')
+        )
