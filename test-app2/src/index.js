@@ -4,9 +4,15 @@ import ReactDOM from 'react-dom';
 // import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router';
 import { BrowserRouter, Route, Link } from "react-router-dom"
 
-import CardsGame from './components/cards/cardsGame';
+// Card Game
+import CardsGame from './script/cards/components/cardsGame';
 
+// Styles
 import './styles/main.scss';
+
+// Redux
+import { Provider } from 'react-redux'
+import store from './script/store'
 
 /* ======= TestApp2 ReactJS ======= */
 
@@ -44,12 +50,14 @@ class Home extends React.Component {
 }
 
 ReactDOM.render((
-    <BrowserRouter>
-        <div>
-            <Navbar />
+    <Provider store={store}>
+        <BrowserRouter>
+            <div>
+                <Navbar />
 
-            <Route exact path = "/" component = {Home} />
-            <Route path = "/cards" component = {CardsGame} />
-        </div>
-    </BrowserRouter>
+                <Route exact path = "/" component = {Home} />
+                <Route path = "/cards" component = {CardsGame} />
+            </div>
+        </BrowserRouter>
+    </Provider>
 ), document.getElementById('app'));

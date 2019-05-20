@@ -24,6 +24,9 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
         react
             npm install react react-dom react-router-dom
             npm install --save-dev prop-types
+        redux
+            npm install redux react-redux
+            npm install --save-dev redux-devtools
         sass
             npm install --save-dev css-loader sass-loader node-sass
 6.  create `webpack.config.js`:
@@ -138,11 +141,318 @@ XX. start it up
         (access at `localhost:8080`)
 
 
-NOTES FOR THE FUTURE:
+
+
+
+REDUX INTEGRATION
+========================================
+* Presentational Components
+    index
+        navbar
+        home
+        cardsGame
+            cardsInput
+            cardsDeck
+                card
+            conclusion
+
+* Container Components
+    Display all cards
+        --> cardsDeck, card
+    Flip card
+        --> cardsDeck, card
+    Change Number of Cards Dealt (implement last)
+        --> cardsInput
+    Reset game
+        --> conclusion
+
+    DOES THIS NEED TO BE REDONE? ignore this for now, you'll know when you need it
+
+* State
+    cardArray: string
+    numCards: number (if this is even necessary?)
+
+* Wrapping
+    Provider
+        Router
+            navbar
+            route=home
+            route=cardsGame
+
+
+
+* ACTIONS
+    * TYPES
+        const REMOVE_CARD = 'REMOVE_CARD';
+        const FLIP_CARD = 'FLIP_CARD';
+        const CHANGE_NUM_CARDS = 'CHANGE_NUM_CARDS';
+        const RESET_GAME = 'RESET_GAME';
+
+    * CREATORS
+        function removeCard(id) {
+            return {
+                type: REMOVE_CARD,
+                cardId: id
+            }
+        }
+
+        function changeNumCards(number) {
+            return {
+                type: CHANGE_NUM_CARDS,
+                numCards: number
+            }
+        }
+
+        function resetGame() {
+            return {
+                type: RESET_GAME
+            }
+        }
+
+    * Example
+        {
+            type: 'FLIP_CARD',
+            cardId: 0
+        }
+        
+        {
+            type: 'CHANGE_NUM_CARDS',
+            numCards: 7
+        }
+
+* REDUCERS
+    * Basic
+        function fullApp (state = {}, action) {
+            switch (action.type) {
+                case REMOVE CARD:
+                    return Object.assign({}, state, {
+                        cardArray: state.cardArray.map((card,index) => {
+                            if (index === action.cardId) {
+                                return "Removed"
+                            }
+                            return card
+                        })
+                    })
+                case CHANGE_NUM_CARDS:
+                    return Object.assign({}, state, {
+                        numCards: action.numCards
+                        cardArray: action.newCardArray
+                    })
+                case RESET_GAME:
+                    return Object.assign({}, state, {
+                        cardArray: action.newCardArray
+                    })
+                default:
+                    return state;
+            }
+        }
+
+    * Split
+        function fullApp (state = {}, action) {
+            visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+            todos: todos(state.todos, action)
+
+            cardNum: changeNumCardsReducer(state.numCards, action),
+            cardArray: cardArrayReducers(state.cardArray, action)
+            // This won't quite work...
+        }
+    
+    * Revised v1
+        (using `combineReducers`)
+        const rootReducer = combineReducers({
+            numCards: numCardsReducer,
+            cardArray: cardArrayReducer
+        });
+
+        function numCardsReducer(state = DEFAULT_CARD_NUM, action) {
+            switch (action.type) {
+                case CHANGE_NUM_CARDS:
+                    return action.numCards;
+                default:
+                    return state;
+            }
+        }
+
+        function cardArrayReducer(state = [], action) {
+            switch (action.type) {
+                case REMOVE_CARD:
+                    return state;
+                case RESET_GAME:
+                    return state;
+                default:
+                    return state;
+            }
+        }
+    
+    * Revised v2
+        function rootReducer(state = {}, action) {
+            return {
+                cardArray: cardArrayReducer(state.cardArray, action)
+            }
+        }
+
+        function cardReducer(state = [], action) {
+            switch (action.type) {
+                case REMOVE_CARD:
+                    return doRemoveCard(state.cardArray.slice(), action.cardId)
+                    });
+                case RESET_GAME:
+                    return action.cardArray;
+                default:
+                    return doDefaultArray(DEFAULT_CARD_NUM);
+            }
+        }
+
+
+
+        function doRemoveCard(cardArray, indexToRemove) {
+            if (cardArray[indexToRemove] !== "Up") {
+                return cardArray;
+            }
+
+            // Flip Left Card
+            if (indexToRemove > 0) {
+                cardArray[indexToRemove-1] = doFlipCard(cardArray[indexToRemove-1]);
+            }
+
+            // Flip Right Card
+            if (indexToRemove < cardArray.length-1) {
+                cardArray[indexToRemove+1] = doFlipCard(cardArray[indexToRemove+1]);
+            }
+            
+            // Remove Selected Card
+            cardArray[indexToRemove] = "Removed";
+
+            return cardArray;
+        }
+
+        function doFlipCard(cardValue) {
+            if (cardValue !== "Removed") {
+                return cardValue === "Down" ? "Up" : "Down";
+            }
+            return cardValue;
+        }
+
+        function doDefaultArray(length) {
+            const newArray = Array(length).fill(null);
+            let countUp = 0;
+
+            for (let i=0; i < length; i++) {
+                newArray[i] = Math.floor(Math.random()*2) === 1 ? "Up" : "Down";
+                countUp += newArray[i] === "Up" ? 1 : 0;
+            }
+            
+            // Ensures at least one cell is face-up
+            if (countUp === 0) {
+                let n = Math.floor(Math.random()*6);
+                newArray[n] = "Up";
+            }
+
+            return newArray;
+        }
+    
+
+
+    * Revised v3 (bad)
+        (using jankey state splitting)
+        function rootReducer(state = {}, action) {
+            return {
+                numCards: numCardsReducer(state.numCards, action),
+                cardArray: cardArrayReducer(state, action)
+            }
+        }
+
+        function numCardsReducer(state = DEFAULT_CARD_NUM, action) {
+            switch (action.type) {
+                case CHANGE_NUM_CARDS:
+                    return action.numCards;
+                default:
+                    return state;
+            }
+        }
+
+        function cardArrayReducer(state = {}, action) {
+            switch (action.type) {
+                case REMOVE_CARD:
+                    return Object.assign({},state,{
+                        cardArray: doRemoveCard(state.cardArray, action.cardId)
+                    });
+                case RESET_GAME:
+                    return Object.assign({},state,{
+                        cardArray: doResetGame(state.cardArray, state.numCards)
+                    });
+                default:
+                    return state;
+            }
+        }
+
+* STORE
+    * Pure Redux
+        const store = createStore(fullApp);
+
+        console.log(store.getState());
+        const unsubscribe = store.subscribe(() => console.log(store.getState()));
+        store.dispatch(actionCreator(arg));
+        unsubscribe();
+
+    * Setup
+        import { Provider } from 'react-redux'
+        import store from './redux/store'
+        ...
+        <Provider store={store}>
+            <App />
+        </Provider>
+
+    * Revised
+        import { createStore } from 'redux';
+
+        const store = createStore(rootReducer);
+
+    * Connecting
+        const mapStateToProps = (state, ownProps) => ({});
+        const mapDispatchToProps = {
+            removeCard,
+            changeNumCards,
+            resetGame
+        };
+
+        connect(mapStateToProps, mapDispatchToProps)(Component);
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+So I am updating my card game to Redux. I have identified the following actions:
+```
+REMOVE_CARD (changes one "up" card to "removed")
+CHANGE_NUM_CARDS (changes total number of cards to play with)
+RESET_GAME (resets the game to a new, random start)
+```
+I have then come up with action creators for each of these (which may change).
+```
+removeCard(id)
+changeNumCards(number)
+resetGame()
+```
+Following this, I am working on reducers. Here I have two problems. First: the result of some of my actions is random. Each game is randomly generated for the number of cards specified. I did some reading (https://daveceddia.com/random-numbers-in-redux/) and basically I need to either have a random-generation function in the action creator, or in the dispatch call. Now, I'm not just generating a random number, but a whole array containing the values of the cards. Thus, would it be appropriate for the action for RESET_GAME to contain an entirely new array of cards?
+
+Second question: this is backing up a bit, but a fundamental thing I have to consider: I classified "REMOVE_CARD" as one action, but every time you remove a card you also flip cards... Pre-redux, the action handler for a click to remove handled that. It removed the card, if appropriate, then flipped the two adjacent cards if necessary. Where should this logic go in Redux? Should the removeCard() action creator handle it all by _also_ creating a new array of cards? or is that too much logic for the action creator? I'm unsure where to put complicated logic like that.
 
 
 

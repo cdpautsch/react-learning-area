@@ -1,0 +1,160 @@
+LEARNING REACT-REDUX
+===================================================
+https://www.valentinog.com/blog/redux/
+
+* Create & Initialize the Store
+    import { createStore } from 'redux';
+    import rootReducer from '../reducers/index';
+
+    const store = createStore(rootReducer);
+
+    export default store;
+
+* State in Redux comes from _Reducers_
+    * State must return entirely from Reducers
+* Connect
+    * mapStateToProps = connects part of Redux state to props of a React component
+        * presentation components get the part of the state store they need to render
+    * mapDispatchToProps = connections Redux actions to React props
+        * this way React components can dispatch actions
+* Example: you have a list you want to render. You must connect it to the store: it needs props from the store
+    (we already render <List/> in the parent presentation component)
+
+    import React from 'react';
+    import { connect } from 'react-redux';
+
+    const mapStateToProps = state => {
+        return { articles: state.articles };
+    };
+
+    // Presentatonal component
+    const ConnectedList = ({ articles }) => (
+        <ul className="list-group">
+            {articles.map(el => (
+                <li className="list-group-item" key={el.id}>
+                    {el.title}
+                </li>
+            ))}
+        </ul>
+    );
+
+    const List = connect(mapStateToProps)(ConnectedList);
+    
+    export default List;
+
+* List component receives prop articles, which is a copy of the articles array we saw in the Redux state, which comes from the reducer `rootReducer()`
+    * Action --> Reducer --> State --> Props --> List --> ConnectedList (sort of)
+    * `List` is the result of connecting the stateless component `ConnectedList` with the Redux store
+* Forms are stateful components
+    * Not every piece of app state should go inside Redux
+    * It's okay to have stateful components
+* Example: Form to submit new articles.
+    * has some logic for updating local state upon form submission
+    * also receives Redux action, so it can update global state by dispatching addArticle actions
+    Code:
+
+    import React, { Component } from 'react';
+    import { connect } from 'react-redux';
+    import uuidv1 from 'uuid'
+    import { addArticle } from '../actions/index';
+
+    function mapDispatchToProps(dispatch) {
+        return {
+            addArticle: article => dispatch(addArticle(article))
+        };
+    }
+
+    class ConnectedForm extends Component {
+        constructor() {
+            super();
+
+            this.state = {
+                title: ''
+            };
+            
+            this.handleChange = this.handleChange.bind(this);
+            this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleChange(event) {
+            this.setState({ [event.target.id]: event.target.value });
+        }
+
+        handleSubmit(event) {
+            event.preventDefault();
+            const { title } = this.state;
+            const id = uuidv1();
+            this.props.addArticle({ title, id });
+            this.setState({ title: '' });
+        }
+
+        render() {
+            const { title } = this.state;
+            return (
+                <form onSubmit={this.handleSubmit}>
+                    ...
+                    <input 
+                        value={title}
+                        onChange={this.handleChange}
+                    />
+                    ...
+                </form>
+            )
+        }
+    }
+
+    const Form = connect(null, mapDispatchToProps)(ConnectedForm);
+    export default Form;
+
+* `mapDispatchToProps` connects Redux actions to React props
+    * A connected component can dispatch actions (via their props)
+* `Form` is the result of connecting `ConnectedForm` with the Redux store
+    * then you can just use `<Form />` in the rest of the app
+* Middleware
+    * Goal of Redux is to move logic out of React components
+    * store => next => action => next(action)
+    * Example
+
+        import { ADD_ARTICLE } from ...
+        const forbiddenWords = ['spam','money'];
+
+        export function forbiddenWordsMiddleware({dispatch}) {
+            return function(next) {
+                return function(action) {
+                    if (action.type === ADD_ARTICLE) {
+                        const foundWord = forbiddenWords.filter(word =>
+                            action.payload.title.includes(word)
+                        );
+
+                        if (foundWord.length) {
+                            return dispatch({type: 'FOUND_BAD_WORD' });
+                        }
+                    }
+                    return next(action);
+                }
+            }
+        }
+
+    * Now apply middleware to store
+
+        import { forbiddenWordsMiddleware } from ...
+
+        const store = createStore(
+            rootReducer,
+            applyMiddleware(forbiddenWordsMiddleware)
+        );
+
+* REVIEW: the official docs vs. this tutorial
+    * Presentational Components == standard React components that render the UI, like normal, should not include business logic
+    * Action Creators == used to create actions (you pass it an argument with the key detail, then it properly structures that into an action)
+    * Reducers == takes all the actions, then determines the action type, then based on that how the state will change
+    * Container Components == a React component that uses `connect()` to read a part of the Redux state tree and supply props to the presentational component it renders
+        * Crucially, it is the Container Component that gets rendered
+        * Tutorial Example
+            const List = connect(mapStateToProps)(ConnectedList);
+            const Form = connect(null, mapDispatchToProps)(ConnectedForm);
+        * Official docs example
+            const VisibileTodoList = connect(
+                mapStateToProps,
+                mapDispatchToProps
+            )(TodoList)

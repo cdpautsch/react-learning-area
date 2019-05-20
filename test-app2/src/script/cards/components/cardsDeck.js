@@ -1,8 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
+import removeCard from '../actions/removeCard';
 import Card from './card';
 
-class CardsDeck extends React.Component {
+function mapStateToProps(state) {
+    return {
+        cardArray: state.cardArray
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onClick: index => dispatch(removeCard(index))
+    };
+}
+
+class ConnectedCardsDeck extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -33,4 +47,6 @@ class CardsDeck extends React.Component {
         );
     }
 }
+
+const CardsDeck = connect(mapStateToProps, mapDispatchToProps)(ConnectedCardsDeck);
 export default CardsDeck;
