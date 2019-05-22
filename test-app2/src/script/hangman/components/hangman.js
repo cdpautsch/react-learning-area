@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import HangmanLetter from './hangmanLetter';
-import HangmanDrawing from './HangmanDrawing';
+import HangmanDrawing from './hangmanDrawing';
 
 function mapStateToProps(state) {
     return {

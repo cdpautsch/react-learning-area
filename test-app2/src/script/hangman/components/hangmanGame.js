@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Hangman from './Hangman';
+import Hangman from './hangman';
 import HangmanWrong from './hangmanWrong';
-import HangmanInput from './HangmanInput';
+import HangmanInput from './hangmanInput';
 import HangmanConclusion from './hangmanConclusion';
 
 class HangmanGame extends React.Component {
