@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Card(props) {
     let fullClass = "card";
@@ -24,3 +25,7 @@ function Card(props) {
     );
 }
 export default Card;
+
+Card.propTypes = {
+    status: PropTypes.oneOf(["Up","Down","Removed"])
+}

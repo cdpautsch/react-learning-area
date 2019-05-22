@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import removeCard from '../actions/removeCard';
 import Card from './card';
 
 function mapStateToProps(state) {
     return {
-        cardArray: state.cardArray
+        cardArray: state.cardState.cardArray
     };
 }
 
@@ -50,3 +51,7 @@ class ConnectedCardsDeck extends React.Component {
 
 const CardsDeck = connect(mapStateToProps, mapDispatchToProps)(ConnectedCardsDeck);
 export default CardsDeck;
+
+ConnectedCardsDeck.propTypes = {
+    cardArray: PropTypes.arrayOf(PropTypes.string)
+}

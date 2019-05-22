@@ -7,6 +7,9 @@ import { BrowserRouter, Route, Link } from "react-router-dom"
 // Card Game
 import CardsGame from './script/cards/components/cardsGame';
 
+// Hangman Game
+import HangmanGame from './script/hangman/components/hangmanGame';
+
 // Styles
 import './styles/main.scss';
 
@@ -28,6 +31,7 @@ class Navbar extends React.Component {
                 <div className="topbar">
                     <Link to='/'>Home</Link>
                     <Link to='/cards'>Cards</Link>
+                    <Link to='/hangman'>Hangman</Link>
                 </div>
             </div>
         )
@@ -57,7 +61,8 @@ ReactDOM.render((
 
                 <Route exact path = "/" component = {Home} />
                 <Route path = "/cards" component = {CardsGame} />
+                <Route path = "/hangman" component = {HangmanGame} />
             </div>
         </BrowserRouter>
     </Provider>
-), document.getElementById('app'));
+), document.getElementById('root'));

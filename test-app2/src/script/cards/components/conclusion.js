@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import resetGame from '../actions/resetGame';
 
 function mapStateToProps(state) {
     return {
-        cardArray: state.cardArray
+        cardArray: state.cardState.cardArray
     };
 }
 
@@ -20,22 +21,25 @@ class ConnectedConclusion extends React.Component {
         super(props);
     }
 
+    renderResults(resultClass, resultMessage) {
+        return (
+            <div className={"card conclusion " + resultClass}>
+                <p>{resultMessage}</p>
+                <button onClick={() => this.props.onClick(this.props.cardArray.length)}>Play Again</button>
+            </div>
+        )
+    }
+
     render() {
         if (this.props.cardArray.includes("Up") == false) {
             if (this.props.cardArray.includes("Down") == false) {
                 return (
-                    <div className="card conclusion">
-                        <p>You won!</p>
-                        <button onClick={this.props.onClick}>Play Again</button>
-                    </div>
+                    this.renderResults("victory","You won!")
                 );
             }
             else {
                 return (
-                    <div className="card conclusion">
-                        <p>You lost! No more viable moves.</p>
-                        <button onClick={() => this.props.onClick(this.props.cardArray.length)}>Play Again</button>
-                    </div>
+                    this.renderResults("defeat","You lost!")
                 );
             }
         }
@@ -47,3 +51,7 @@ class ConnectedConclusion extends React.Component {
 
 const Conclusion = connect(mapStateToProps, mapDispatchToProps)(ConnectedConclusion);
 export default Conclusion;
+
+ConnectedConclusion.propTypes = {
+    cardArray: PropTypes.arrayOf(PropTypes.string)
+}

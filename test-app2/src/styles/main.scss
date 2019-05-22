@@ -1,6 +1,8 @@
-@import '_theme.scss';
-@import '_variables.scss';
-@import '_cards.scss';
+@import 'theme';
+@import 'variables';
+@import 'mixins';
+@import 'cards';
+@import 'hangman';
 
 body {
     background: $OffWhite;
@@ -15,8 +17,8 @@ h1, h2, h3, h4 {
 .content {
     display: block;
     border: 2px solid $DarkBlue;
+    @include borderRadius($global-radius);
     margin: $global-margin;
-    border-radius: $global-radius;
     background: $White;
 }
 
@@ -39,7 +41,7 @@ h1, h2, h3, h4 {
         padding: 0.25rem 1rem;
         background: $DarkBlue;
         color: $White;
-        border-radius: $global-radius;
+        @include borderRadius($global-radius);
         text-decoration: none;
         border: 2px solid $DarkBlue;
 
@@ -56,14 +58,53 @@ div.color-bar {
     height: 0.5rem;
 }
 
-button {
+button, input[type=submit] {
     border-width: 2px;
     border-style: solid;
-    border-radius: $global-radius;
+    @include borderRadius($global-radius);
     border-color: $AltGrey;
     cursor: pointer;
 
     &:hover {
         border-color: $Grey;
+    }
+
+    &:disabled, &:disabled:hover {
+        color: $MedGrey;
+        border-color: $AltGrey;
+        cursor: not-allowed;
+    } 
+}
+
+.game-intro {
+    margin: 0.75rem;
+    
+    p {
+        font-size: 0.875rem;
+    }
+}
+
+.conclusion {
+    text-align: center;
+    line-height: 2rem;
+
+    &.victory {
+        color: $DarkGreen;
+        font-weight: bold;
+    }
+
+    &.defeat {
+        color: $Red;
+    }
+
+    p {
+        font-size: 1.25rem;
+    }
+
+    button {
+        margin-bottom: 1rem;
+        min-width: 125px;
+        letter-spacing: 1px;
+        font-weight: bold;
     }
 }

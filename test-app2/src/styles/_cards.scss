@@ -1,13 +1,3 @@
-.game-intro, .cards-deck {
-    margin: 0.75rem;
-}
-
-.game-intro {
-    p {
-        font-size: 0.875rem;
-    }
-}
-
 .cards-input {
     text-align: center;
 
@@ -15,10 +5,15 @@
         display: inline-block;
         margin-right: $global-margin;
     }
+
+    button {
+        margin-left: $global-margin * 2;
+    }
 }
 
 .cards-deck {
     text-align: center;
+    margin: 0.75rem;
 
     .card {
         display: inline-block;
@@ -52,9 +47,4 @@
             cursor: not-allowed;
         }
     }
-}
-
-.conclusion {
-    text-align: center;
-    line-height: 4rem;
 }

@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { DEFAULT_CARD_NUM } from '../constants/globalConstants';
 import resetGame from '../actions/resetGame';
 
 function mapStateToProps(state) {
     return {
-        currentCardNum: state.cardArray.length
+        currentCardNum: state.cardState.cardArray.length
     }
 }
 
@@ -25,6 +26,7 @@ class ConnectedCardsInput extends React.Component {
         }
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     handleChange(e) {
@@ -32,6 +34,10 @@ class ConnectedCardsInput extends React.Component {
         this.setState({
             numCards: e.target.value
         });
+    }
+
+    handleClick() {
+        this.props.resetAction(this.state.numCards);
     }
 
     renderOptions() {
@@ -68,6 +74,7 @@ class ConnectedCardsInput extends React.Component {
                 >
                     {renderedArray}
                 </select>
+                <button onClick={this.handleClick}>Reset</button>
             </div>
         )
     }
@@ -75,3 +82,7 @@ class ConnectedCardsInput extends React.Component {
 
 const CardsInput = connect(mapStateToProps,mapDispatchToProps)(ConnectedCardsInput);
 export default CardsInput;
+
+ConnectedCardsInput.propTypes = {
+    status: PropTypes.number
+}

@@ -1,19 +1,23 @@
 import { REMOVE_CARD, RESET_GAME, INITIAL_LOAD } from '../constants/actionTypes';
-import { DEFAULT_CARD_NUM } from '../constants/globalConstants';
 import { removeAndFlipCards, createNewArray } from '../functions/cardFunctions';
+import { initialCardState } from '../constants/initialState';
 
-const defaultCardArray = ["Up","Down","Down","Down","Down"];
-
-function cardReducer(state = [], action) {
+function cardReducer(state = initialCardState, action) {
     switch (action.type) {
         case REMOVE_CARD:
-            return removeAndFlipCards(state.slice(), action.cardId);
+            return Object.assign({}, state, {
+                cardArray: removeAndFlipCards(state.cardArray.slice(), action.cardId)
+            });
         case RESET_GAME:
-            return action.cardArray;
+            return Object.assign({}, state, {
+                cardArray: action.cardArray
+            });
         case INITIAL_LOAD:
-            return action.cardArray;
+            return Object.assign({}, state, {
+                cardArray: action.cardArray
+            });
         default:
-            return defaultCardArray;
+            return state;
     }
 }
 export default cardReducer;

@@ -1,5 +1,6 @@
 import { createStore } from 'redux';
 import rootReducer from './rootReducer';
+import { initialCardState } from './cards/constants/initialState';
 
 const store = createStore(
     rootReducer,

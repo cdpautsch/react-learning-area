@@ -1,0 +1,73 @@
+.hangman, .hangman-input, .hangman-wrong {
+    text-align: center;
+}
+
+.hangman-input {
+    form {
+        margin-top: $global-margin * 2;
+        margin-bottom: $global-margin * 2;
+    }
+
+    input {
+        width: 4rem;
+        margin-left: $global-margin;
+        margin-right: $global-margin * 2;
+    }
+}
+
+.hangman {
+    li.letter {
+        border-bottom: 1px solid $Black;
+    }
+
+    svg {
+        width: 100px;
+        height: 150px;
+        margin: $global-margin;
+
+        #the-platform {
+            fill: $Brown;
+            stroke: $Brown;
+        }
+
+        #the-rope {
+            fill: none;
+            stroke: $Brown;
+            stroke-width: 2;
+        }
+
+        #the-hangman {
+            fill: none;
+            stroke: $Black;
+            stroke-width: 2;
+        }
+    }
+}
+
+.hangman-wrong {
+    ul {
+        min-height: 1.125rem;
+    }
+
+    .wrong-letters-title {
+        font-size: 0.875rem;
+    }
+
+    li.wrong-letter {
+        text-decoration: line-through;
+    }
+}
+
+ul {
+    padding-left: 0;
+
+    li {
+        list-style-type: none;
+        display: inline-block;
+        margin-left: $global-radius;
+        margin-right: $global-radius;
+        min-width: 1rem;
+        min-height: 1.25rem;
+        vertical-align: bottom;
+    }
+}
