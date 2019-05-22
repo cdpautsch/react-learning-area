@@ -7,7 +7,8 @@ import { MAX_WRONG_ANSWERS } from '../constants/globalConstants';
 function mapStateToProps(state) {
     return {
         numEmptyLetters: state.hangmanState.rightLetters.length - state.hangmanState.rightLetters.filter(String).length,
-        numWrongLetters: state.hangmanState.wrongLetters.length
+        numWrongLetters: state.hangmanState.wrongLetters.length,
+        guessWord: state.hangmanState.guessWord
     };
 }
 
@@ -38,7 +39,7 @@ class ConnectedHangmanConclusion extends React.Component {
             return this.renderResults("victory","Victory! You guessed all the letters correctly!");
         }
         else if (this.props.numWrongLetters >= MAX_WRONG_ANSWERS) {
-            return this.renderResults("defeat","Defeat! You have run out of guesses.");
+            return this.renderResults("defeat","Defeat! You have run out of guesses. The word was '" + this.props.guessWord + "'.");
         }
         else {
             return null;

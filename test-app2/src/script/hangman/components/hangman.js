@@ -7,7 +7,7 @@ import HangmanDrawing from './hangmanDrawing';
 function mapStateToProps(state) {
     return {
         rightLetters: state.hangmanState.rightLetters
-    }
+    };
 }
 
 class ConnectedHangman extends React.Component {
@@ -23,7 +23,7 @@ class ConnectedHangman extends React.Component {
                         key={index.toString()}
                         letter={letter}
                         index={index}
-                        className={"letter"}
+                        className={letter === " " ? "space" : "letter"}
                     />
                 );
             })
@@ -41,7 +41,7 @@ class ConnectedHangman extends React.Component {
                     {renderedLetters}
                 </ul>
             </div>
-        )
+        );
     }
 }
 

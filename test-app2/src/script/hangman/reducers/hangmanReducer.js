@@ -1,8 +1,8 @@
 import { GUESS_LETTER, RESET_GAME } from '../constants/actionTypes';
-import { MAX_WRONG_ANSWERS } from '../constants/globalConstants.js';
 import initialHangmanState from '../constants/initialState';
 import addCorrectGuess from '../functions/addCorrectGuess';
 import addWrongGuess from '../functions/addWrongGuess';
+import getNewRightLetters from '../functions/getNewRightLetters';
 
 function hangmanReducer(state = initialHangmanState, action) {
     switch (action.type) {
@@ -22,7 +22,7 @@ function hangmanReducer(state = initialHangmanState, action) {
         case RESET_GAME:
             return Object.assign({}, state, {
                 wrongLetters: [],
-                rightLetters: Array(action.guessWord.length).fill(""),
+                rightLetters: getNewRightLetters(action.guessWord),
                 guessWord: action.guessWord
             });
         default:

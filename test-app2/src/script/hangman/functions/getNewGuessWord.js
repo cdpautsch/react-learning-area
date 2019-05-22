@@ -1,12 +1,8 @@
-const tempWordBank = [
-    "DRAGON",
-    "STARK",
-    "LONGCLAW"
-]
+import { wordBank } from '../constants/animalWordBank';
 
 function getNewGuessWord() {
-    const randomWordIndex = Math.floor(Math.random() * tempWordBank.length);
+    const randomWordIndex = Math.floor(Math.random() * wordBank.length);
 
-    return tempWordBank[randomWordIndex];
+    return wordBank[randomWordIndex];
 }
 export default getNewGuessWord;
