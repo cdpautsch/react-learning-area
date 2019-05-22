@@ -1,5 +1,5 @@
-import { REMOVE_CARD, RESET_GAME, INITIAL_LOAD } from '../constants/actionTypes';
-import { removeAndFlipCards, createNewArray } from '../functions/cardFunctions';
+import { REMOVE_CARD, RESET_GAME } from '../constants/actionTypes';
+import { removeAndFlipCards } from '../functions/cardFunctions';
 import { initialCardState } from '../constants/initialState';
 
 function cardReducer(state = initialCardState, action) {
@@ -9,10 +9,6 @@ function cardReducer(state = initialCardState, action) {
                 cardArray: removeAndFlipCards(state.cardArray.slice(), action.cardId)
             });
         case RESET_GAME:
-            return Object.assign({}, state, {
-                cardArray: action.cardArray
-            });
-        case INITIAL_LOAD:
             return Object.assign({}, state, {
                 cardArray: action.cardArray
             });
