@@ -1,4 +1,4 @@
-import { GUESS_LETTER, RESET_GAME } from '../constants/actionTypes';
+import { GUESS_LETTER, RESET_HANGMAN } from '../constants/actionTypes';
 import initialHangmanState from '../constants/initialState';
 import addCorrectGuess from '../functions/addCorrectGuess';
 import addWrongGuess from '../functions/addWrongGuess';
@@ -19,7 +19,7 @@ function hangmanReducer(state = initialHangmanState, action) {
                     action.guessLetter
                 )
             ));
-        case RESET_GAME:
+        case RESET_HANGMAN:
             return Object.assign({}, state, {
                 wrongLetters: [],
                 rightLetters: getNewRightLetters(action.guessWord),

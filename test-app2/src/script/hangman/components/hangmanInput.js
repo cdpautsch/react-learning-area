@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import guessLetter from '../actions/guessLetter';
 import { MAX_WRONG_ANSWERS } from '../constants/globalConstants';
@@ -87,3 +88,7 @@ class ConnectedHangmanInput extends React.Component {
 
 const HangmanInput = connect(mapStateToProps,mapDispatchToProps)(ConnectedHangmanInput);
 export default HangmanInput;
+
+ConnectedHangmanInput.propTypes = {
+    gameOver: PropTypes.bool
+};

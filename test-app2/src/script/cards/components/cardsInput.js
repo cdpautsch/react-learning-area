@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { DEFAULT_CARD_NUM } from '../constants/globalConstants';
-import resetGame from '../actions/resetGame';
+import resetCards from '../actions/resetCards';
 
 function mapStateToProps(state) {
     return {
@@ -13,7 +12,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        resetAction: numCards => dispatch(resetGame(numCards))
+        resetAction: numCards => dispatch(resetCards(numCards))
     };
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import HangmanLetter from './hangmanLetter';
 import HangmanDrawing from './hangmanDrawing';
@@ -20,7 +21,7 @@ class ConnectedHangman extends React.Component {
             letterArray.map((letter,index) => {
                 return (
                     <HangmanLetter
-                        key={index.toString()}
+                        key={index}
                         letter={letter}
                         index={index}
                         className={letter === " " ? "space" : "letter"}
@@ -47,3 +48,7 @@ class ConnectedHangman extends React.Component {
 
 const Hangman = connect(mapStateToProps)(ConnectedHangman);
 export default Hangman;
+
+ConnectedHangman.propTypes = {
+    rightLetters: PropTypes.arrayOf(PropTypes.string)
+};

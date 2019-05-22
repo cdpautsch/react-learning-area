@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { hangmanBodyPaths } from '../constants/hangmanBodyPaths';
 
@@ -51,3 +52,7 @@ class ConnectedHangmanDrawing extends React.Component {
 
 const HangmanDrawing = connect(mapStateToProps)(ConnectedHangmanDrawing);
 export default HangmanDrawing;
+
+ConnectedHangmanDrawing.propTypes = {
+    numberWrongAnswers: PropTypes.number
+};

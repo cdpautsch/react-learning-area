@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import resetGame from '../actions/resetGame';
+import resetHangman from '../actions/resetHangman';
 import { MAX_WRONG_ANSWERS } from '../constants/globalConstants';
 
 function mapStateToProps(state) {
@@ -14,7 +15,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        resetAction: () => dispatch(resetGame())
+        resetAction: () => dispatch(resetHangman())
     };
 }
 
@@ -49,3 +50,9 @@ class ConnectedHangmanConclusion extends React.Component {
 
 const HangmanConclusion = connect(mapStateToProps, mapDispatchToProps)(ConnectedHangmanConclusion);
 export default HangmanConclusion;
+
+ConnectedHangmanConclusion.propTypes = {
+    numEmptyLetters: PropTypes.number,
+    numWrongLetters: PropTypes.number,
+    guessWord: PropTypes.string
+};

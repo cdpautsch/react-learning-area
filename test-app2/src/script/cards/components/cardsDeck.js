@@ -54,4 +54,4 @@ export default CardsDeck;
 
 ConnectedCardsDeck.propTypes = {
     cardArray: PropTypes.arrayOf(PropTypes.string)
-}
+};

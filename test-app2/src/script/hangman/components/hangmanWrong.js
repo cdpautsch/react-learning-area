@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import HangmanLetter from './hangmanLetter';
 
@@ -46,3 +47,7 @@ class ConnectedHangmanWrong extends React.Component {
 
 const HangmanWrong = connect(mapStateToProps)(ConnectedHangmanWrong);
 export default HangmanWrong;
+
+ConnectedHangmanWrong.propTypes = {
+    wrongLetters: PropTypes.arrayOf(PropTypes.string)
+}

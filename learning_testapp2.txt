@@ -29,6 +29,11 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
             npm install --save-dev redux-devtools
         sass
             npm install --save-dev css-loader sass-loader node-sass
+        other
+            npm install --save-dev html-loader
+        TOTAL
+            npm install --save-dev webpack webpack-dev-server webpack-cli @babel/core @babel/preset-env @babel/preset-react babel-loader html-webpack-plugin mini-css-extract-plugin clean-webpack-plugin prop-types redux-devtools css-loader sass-loader node-sass html-loader
+            npm install react react-dom react-router-dom redux react-redux
 6.  create `webpack.config.js`:
         const webpack = require('webpack');
         const HtmlWebpackPlugin = require('html-webpack-plugin');
