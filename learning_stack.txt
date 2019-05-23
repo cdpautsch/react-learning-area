@@ -117,8 +117,163 @@ ESLint
 https://medium.com/@joshuacrass/javascript-linting-and-formatting-with-eslint-prettier-and-airbnb-30eb746db862
 * What is it?
 
+
 https://www.reddit.com/r/reactjs/comments/beiys2/what_are_the_eslint_plugins_you_use_for_your/
 * ???
+
+
+https://www.robinwieruch.de/react-eslint-webpack-babel/
+* Install
+    npm install --save-dev
+        eslint
+        eslint-loader
+        babel-eslint
+        eslint-plugin-react
+* Update webpack config rules:
+    {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: ['babel-loader','eslint-loader']
+    }
+* Create eslint config:
+    .eslintrc
+* Add rules (list at https://eslint.org/docs/rules/):
+    {
+        parser: "babel-eslint",
+        "plugins": [
+            "react"
+        ],
+        "rules": {
+            "max-len": [1,70,2, {ignoreComments; true}],
+            "prop-types": [2]
+        },
+    }
+* Presets:
+    * React: https://github.com/yannickcr/eslint-plugin-react#user-content-recommended-configuration
+    * Airbnb: https://github.com/airbnb/javascript, https://www.npmjs.com/package/eslint-config-airbnb
+* Install Presets:
+    npm install --save-dev
+        eslint-config-airbnb
+        eslint-plugin-import
+        eslint-plugin-jsx-a11y
+* Add after 'rules':
+    "extends": ["airbnb-base"]
+* Disable a rule globally (example):
+    "no-unused-vars": 0
+* Total installs (sum of previously mentioned):
+    npm install --save-dev
+        babel-eslint
+        eslint
+        eslint-loader
+        eslint-config-airbnb
+        eslint-plugin-import
+        eslint-plugin-jsx-a11y
+        eslint-plugin-react
+* Total config (sum of above):
+    {
+        parser: "babel-eslint",
+        "plugins": [
+            "react"
+        ],
+        "rules": {
+            "max-len": [1,70,2, {ignoreComments; true}],
+            "prop-types": [2]
+        },
+        "extends": ["airbnb-base"]
+    }
+
+
+
+https://medium.com/@joshuacrass/javascript-linting-and-formatting-with-eslint-prettier-and-airbnb-30eb746db862
+* Install prettier
+    npm install --save-dev
+        prettier                (code formatter)
+        eslint-config-prettier  (tunrs off rules that conflict w/ prettier)
+        eslint-plugin-prettier  (runs prettier as an ESLint rule and reports differences as issues)
+* Install eslint
+    npm install --save-dev
+        eslint                  (linter)
+        eslint-config-airbnb    (airbnb style guide for ESLint)
+        eslint-plugin-import    (supports ES6 imports)
+        eslint-plugin-jsx-a11y  (for JSX, required by eslint)
+        eslint-plugin-react     (React-specific linting)
+        eslint-import-resolver-webpack  (webpack-literate module resolution plugin)
+* Setup `.eslintrc` (can be `.json` or `.js`):
+    {
+        "extends": ["airbnb", "prettier", "prettier/react"],
+        "plugins": ["react", "prettier"],
+        "rules": {
+            "react/jsx-filename-extension": [
+                1,
+                {
+                    "extensions": [".js", "jsx"]
+                }
+            ],
+            "prettier/prettier": "error",
+            "max-len": ["error", 80]
+        },
+        "env": {
+            "browser": true
+        },
+        "settings": {
+            "import/resolver": {
+                "webpack": {
+                    "config": "./config/webpack-common-config.js"
+                }
+            }
+        }
+    }
+* Create script to run ESLint in `package.json`:
+    "lint": "eslint src -c .eslintrc.json --ext js,jsx",
+    (this will lint js/jsx files in src directory with a given config file)
+* Create `.eslintignore` file:
+    node_modules/*
+    build/*
+    dist/*
+* `eslint-config-prettier` will turn off certain conflicting rules, but you can also override rules by adding a `.prettierrc` file:
+    {
+        "singleQuote": true,
+        "trailingComma": "all"
+    }
+* Linting
+    (_no_ auto-fixing)
+        npm run lint
+    (w/ auto-fixing)
+        npm run lint --fix
+* Git Hooks w/ Husky (https://github.com/typicode/husky)
+    * Install
+        npm install --save-dev husky lint-staged
+    * update `package.json`:
+        "husky": {
+            "hooks": {
+                "pre-commit": "lint-staged",
+            }
+        },
+        "lint-staged": {
+            "*.{js,jsx}": [
+                "eslint"
+            ],
+            "*.{js,jsx,json,md}": [
+                "prettier --list-different"
+            ]
+        }
+    * If you want to limit which files are linted, change `lint-staged` to:
+        "src/**/*.{js,jsx}"
+        (will only lint files in `src/`)
+    * You can skip linting with:
+        git commit -m "message" --no-verify
+    * Add new script in `package.json`:
+        "check-staged": "lint-staged",
+    * Run:
+        (modify and add/stage files)
+        npm check-staged
+    * Commit changes (should see confirmation from husky)
+* TOTAL INSTALLS:
+    npm install --save-dev prettier eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-import-resolver-webpack eslint-config-prettier eslint-plugin-prettier husky lint-staged
+
+
+
+RESEARCH FOR LATER: `sass-lint`
 
 
 
