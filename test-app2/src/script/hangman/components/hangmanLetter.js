@@ -1,19 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-class HangmanLetter extends React.Component {
-    render() {
-        return (
-            <li className={this.props.className}>
-                {this.props.letter}
-            </li>
-        );
-    }
+function HangmanLetter(props) {
+    const { className, letter } = props;
+    return <li className={className}>{letter}</li>;
 }
 export default HangmanLetter;
 
 HangmanLetter.propTypes = {
     letter: PropTypes.string,
-    className: PropTypes.string,
-    index: PropTypes.number
-}
+    className: PropTypes.string
+};
+
+HangmanLetter.defaultProps = {
+    letter: "",
+    className: "letter"
+};

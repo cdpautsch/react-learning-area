@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import guessLetter from '../actions/guessLetter';
-import { MAX_WRONG_ANSWERS } from '../constants/globalConstants';
+import guessLetter from "../actions/guessLetter";
+import { MAX_WRONG_ANSWERS } from "../constants/globalConstants";
 
 function mapStateToProps(state) {
     return {
-        gameOver: (
-            state.hangmanState.wrongLetters.length >= MAX_WRONG_ANSWERS
-            || state.hangmanState.rightLetters.length - state.hangmanState.rightLetters.filter(String).length <= 0
-            ? true : false
-        )
+        gameOver:
+            state.hangmanState.wrongLetters.length >= MAX_WRONG_ANSWERS ||
+            state.hangmanState.rightLetters.length -
+                state.hangmanState.rightLetters.filter(String).length <=
+                0
     };
 }
 
@@ -35,6 +35,10 @@ class ConnectedHangmanInput extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount() {
+        this.letterInput.current.focus();
+    }
+
     handleChange(e) {
         if (e.target.value.length <= 1) {
             this.setState({
@@ -45,50 +49,61 @@ class ConnectedHangmanInput extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        const { letterValue } = this.state;
+        const { guessAction } = this.props;
 
-        if (this.state.letterValue.length === 1) {
-            this.props.guessAction(this.state.letterValue);
+        if (letterValue.length === 1) {
+            guessAction(letterValue);
         }
 
         this.letterInput.current.focus();
 
         this.setState({
             letterValue: ""
-        })
-    }
-
-    componentDidMount() {
-        this.letterInput.current.focus();
+        });
     }
 
     render() {
+        const { letterValue } = this.state;
+        const { gameOver } = this.props;
+
         return (
             <div className="hangman-input">
                 <form onSubmit={this.handleSubmit}>
-                    <label>
+                    <label htmlFor="letter-input">
                         Choose your next letter:
+                        <input
+                            id="letter-input"
+                            type="text"
+                            value={letterValue}
+                            onChange={this.handleChange}
+                            ref={this.letterInput}
+                            disabled={gameOver ? "disabled" : ""}
+                        />
                     </label>
-                    <input
-                        type="text"
-                        value={this.state.letterValue}
-                        onChange={this.handleChange}
-                        ref={this.letterInput}
-                        disabled={(this.props.gameOver) ? "disabled" : ""}
-                    ></input>
                     <input
                         type="submit"
                         value="Submit"
-                        disabled={(this.props.gameOver) ? "disabled" : ""}
+                        disabled={gameOver ? "disabled" : ""}
                     />
                 </form>
             </div>
-        )
+        );
     }
 }
 
-const HangmanInput = connect(mapStateToProps,mapDispatchToProps)(ConnectedHangmanInput);
+const HangmanInput = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConnectedHangmanInput);
 export default HangmanInput;
 
 ConnectedHangmanInput.propTypes = {
-    gameOver: PropTypes.bool
+    gameOver: PropTypes.bool,
+    guessAction: PropTypes.func
+};
+
+ConnectedHangmanInput.defaultProps = {
+    gameOver: true,
+    guessAction: () => {}
 };

@@ -39,15 +39,15 @@ h1, h2, h3, h4 {
         margin: 0.5rem;
         display: inline-block;
         padding: 0.25rem 1rem;
-        background: $DarkBlue;
-        color: $White;
+        background: $White;
+        color: $DarkBlue;
         @include borderRadius($global-radius);
         text-decoration: none;
         border: 2px solid $DarkBlue;
 
-        &:hover {
-            background: $White;
-            color: $DarkBlue;
+        &:hover, &.active {
+            background: $DarkBlue;
+            color: $White;
         }
     }
 }

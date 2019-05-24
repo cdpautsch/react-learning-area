@@ -1,8 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import HangmanLetter from './hangmanLetter';
+import HangmanLetter from "./hangmanLetter";
 
 function mapStateToProps(state) {
     return {
@@ -11,37 +11,29 @@ function mapStateToProps(state) {
 }
 
 class ConnectedHangmanWrong extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderWrongLetters(letterArray) {
-        return (
-            letterArray.map((letter,index) => {
-                return (
-                    <HangmanLetter
-                        key={index.toString()}
-                        letter={letter}
-                        index={index}
-                        className={"wrong-letter"}
-                    />
-                );
-            })
-        );
+        return letterArray.map((letter, index) => {
+            return (
+                <HangmanLetter
+                    key={index.toString()}
+                    letter={letter}
+                    index={index}
+                    className="wrong-letter"
+                />
+            );
+        });
     }
 
     render() {
-        const wrongLetters = this.props.wrongLetters;
+        const { wrongLetters } = this.props;
         const renderedWrongLetters = this.renderWrongLetters(wrongLetters);
 
         return (
             <div className="hangman-wrong">
                 <p className="wrong-letters-title">Wrong Letters:</p>
-                <ul>
-                    {renderedWrongLetters}
-                </ul>
+                <ul>{renderedWrongLetters}</ul>
             </div>
-        )
+        );
     }
 }
 
@@ -50,4 +42,8 @@ export default HangmanWrong;
 
 ConnectedHangmanWrong.propTypes = {
     wrongLetters: PropTypes.arrayOf(PropTypes.string)
-}
+};
+
+ConnectedHangmanWrong.defaultProps = {
+    wrongLetters: []
+};

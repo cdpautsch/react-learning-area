@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import removeCard from '../actions/removeCard';
-import Card from './card';
+import removeCard from "../actions/removeCard";
+import Card from "./card";
 
 function mapStateToProps(state) {
     return {
@@ -18,40 +18,41 @@ function mapDispatchToProps(dispatch) {
 }
 
 class ConnectedCardsDeck extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderCards(cardArray) {
-        return (
-            cardArray.map((status,index) => {
-                return (
-                    <Card
-                        status={status}
-                        key={index.toString()}
-                        onClick={() => this.props.onClick(index)}
-                    />
-                );
-            })
-        );
+        const { onClick } = this.props;
+
+        return cardArray.map((status, index) => {
+            return (
+                <Card
+                    status={status}
+                    key={index.toString()}
+                    onClick={() => onClick(index)}
+                />
+            );
+        });
     }
 
     render() {
-        const cardArray = this.props.cardArray;
+        const { cardArray } = this.props;
 
         const renderedArray = this.renderCards(cardArray);
 
-        return (
-            <div className="cards-deck">
-                {renderedArray}
-            </div>
-        );
+        return <div className="cards-deck">{renderedArray}</div>;
     }
 }
 
-const CardsDeck = connect(mapStateToProps, mapDispatchToProps)(ConnectedCardsDeck);
+const CardsDeck = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConnectedCardsDeck);
 export default CardsDeck;
 
 ConnectedCardsDeck.propTypes = {
-    cardArray: PropTypes.arrayOf(PropTypes.string)
+    cardArray: PropTypes.arrayOf(PropTypes.string),
+    onClick: PropTypes.func
+};
+
+ConnectedCardsDeck.defaultProps = {
+    cardArray: ["Up"],
+    onClick: () => {}
 };

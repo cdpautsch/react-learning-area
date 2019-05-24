@@ -6,7 +6,7 @@ function addCorrectGuess(rightLetters, guessLetter, guessWord) {
     }
 
     return {
-        rightLetters: rightLetters
-    }
+        rightLetters
+    };
 }
 export default addCorrectGuess;

@@ -1,9 +1,9 @@
-import getNewGuessWord from '../functions/getNewGuessWord';
-import getNewRightLetters from '../functions/getNewRightLetters';
+import getNewGuessWord from "../functions/getNewGuessWord";
+import getNewRightLetters from "../functions/getNewRightLetters";
 
 const initialGuessWord = getNewGuessWord();
 
-export const initialHangmanState = {
+const initialHangmanState = {
     wrongLetters: [],
     rightLetters: getNewRightLetters(initialGuessWord),
     guessWord: initialGuessWord

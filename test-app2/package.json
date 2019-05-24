@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
     "build": "webpack --mode production",
-    "lint": "eslint src -c .eslintrc.json --ext js,jsx"
+    "lint": "eslint src -c .eslintrc.json --ext js,jsx",
+    "check-staged": "lint-staged"
   },
   "keywords": [],
   "author": "cdpautsch",
@@ -15,6 +16,23 @@
     "presets": [
       "@babel/preset-env",
       "@babel/preset-react"
+    ]
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 80
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint"
+    ],
+    "src/**/*.{js,jsx,json,md}": [
+      "prettier --list-different"
     ]
   },
   "devDependencies": {
@@ -39,7 +57,6 @@
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.17.1",
-    "prop-types": "^15.7.2",
     "redux-devtools": "^3.5.0",
     "sass-loader": "^7.1.0",
     "webpack": "^4.31.0",
@@ -47,10 +64,12 @@
     "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "uuid": "^3.3.2"
   }
 }

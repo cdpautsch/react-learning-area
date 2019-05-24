@@ -1,4 +1,4 @@
-export const wordBank = [
+const wordBank = [
     "AARDVARK",
     "ALBATROSS",
     "ALLIGATOR",
@@ -222,5 +222,6 @@ export const wordBank = [
     "WOMBAT",
     "WREN",
     "YAK",
-    "ZEBRA",
+    "ZEBRA"
 ];
+export default wordBank;

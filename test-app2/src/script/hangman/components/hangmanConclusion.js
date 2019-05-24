@@ -1,13 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import resetHangman from '../actions/resetHangman';
-import { MAX_WRONG_ANSWERS } from '../constants/globalConstants';
+import resetHangman from "../actions/resetHangman";
+import { MAX_WRONG_ANSWERS } from "../constants/globalConstants";
 
 function mapStateToProps(state) {
     return {
-        numEmptyLetters: state.hangmanState.rightLetters.length - state.hangmanState.rightLetters.filter(String).length,
+        numEmptyLetters:
+            state.hangmanState.rightLetters.length -
+            state.hangmanState.rightLetters.filter(String).length,
         numWrongLetters: state.hangmanState.wrongLetters.length,
         guessWord: state.hangmanState.guessWord
     };
@@ -20,39 +22,54 @@ function mapDispatchToProps(dispatch) {
 }
 
 class ConnectedHangmanConclusion extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderResults(resultClass, resultMessage) {
+        const { resetAction } = this.props;
         return (
-            <div className={"conclusion " + resultClass}>
+            <div className={`conclusion ${resultClass}`}>
                 <p>{resultMessage}</p>
-                <button
-                    onClick={this.props.resetAction}
-                >Play Again</button>
+                <button type="button" onClick={resetAction}>
+                    Play Again
+                </button>
             </div>
-        )
+        );
     }
 
     render() {
-        if (this.props.numEmptyLetters <= 0) {
-            return this.renderResults("victory","Victory! You guessed all the letters correctly!");
-        }
-        else if (this.props.numWrongLetters >= MAX_WRONG_ANSWERS) {
-            return this.renderResults("defeat","Defeat! You have run out of guesses. The word was '" + this.props.guessWord + "'.");
-        }
-        else {
+        const { numEmptyLetters, numWrongLetters, guessWord } = this.props;
+
+        if (numEmptyLetters <= 0) {
+            return this.renderResults(
+                "victory",
+                "Victory! You guessed all the letters correctly!"
+            );
+        } else if (numWrongLetters >= MAX_WRONG_ANSWERS) {
+            return this.renderResults(
+                "defeat",
+                `Defeat! You have run out of guesses.
+                The word was '${guessWord}'.`
+            );
+        } else {
             return null;
         }
     }
 }
 
-const HangmanConclusion = connect(mapStateToProps, mapDispatchToProps)(ConnectedHangmanConclusion);
+const HangmanConclusion = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConnectedHangmanConclusion);
 export default HangmanConclusion;
 
 ConnectedHangmanConclusion.propTypes = {
     numEmptyLetters: PropTypes.number,
     numWrongLetters: PropTypes.number,
-    guessWord: PropTypes.string
+    guessWord: PropTypes.string,
+    resetAction: PropTypes.func
+};
+
+ConnectedHangmanConclusion.defaultProps = {
+    numEmptyLetters: 1,
+    numWrongLetters: 0,
+    guessWord: "SOMETHING",
+    resetAction: () => {}
 };

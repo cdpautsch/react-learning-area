@@ -1,4 +1,4 @@
-import { wordBank } from '../constants/animalWordBank';
+import wordBank from "../constants/animalWordBank";
 
 function getNewGuessWord() {
     const randomWordIndex = Math.floor(Math.random() * wordBank.length);

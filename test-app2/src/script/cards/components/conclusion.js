@@ -1,8 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import resetCards from '../actions/resetCards';
+import resetCards from "../actions/resetCards";
 
 function mapStateToProps(state) {
     return {
@@ -13,45 +13,50 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         onClick: numCards => dispatch(resetCards(numCards))
-    }
+    };
 }
 
 class ConnectedConclusion extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderResults(resultClass, resultMessage) {
+        const { onClick } = this.props;
+        const { cardArray } = this.props;
+        const numCards = cardArray.length;
         return (
-            <div className={"card conclusion " + resultClass}>
+            <div className={`card conclusion ${resultClass}`}>
                 <p>{resultMessage}</p>
-                <button onClick={() => this.props.onClick(this.props.cardArray.length)}>Play Again</button>
+                <button type="button" onClick={() => onClick(numCards)}>
+                    Play Again
+                </button>
             </div>
-        )
+        );
     }
 
     render() {
-        if (this.props.cardArray.includes("Up") == false) {
-            if (this.props.cardArray.includes("Down") == false) {
-                return (
-                    this.renderResults("victory","You won!")
-                );
+        const { cardArray } = this.props;
+        if (cardArray.includes("Up") === false) {
+            if (cardArray.includes("Down") === false) {
+                return this.renderResults("victory", "You won!");
+            } else {
+                return this.renderResults("defeat", "You lost!");
             }
-            else {
-                return (
-                    this.renderResults("defeat","You lost!")
-                );
-            }
-        }
-        else {
+        } else {
             return null;
         }
     }
 }
 
-const Conclusion = connect(mapStateToProps, mapDispatchToProps)(ConnectedConclusion);
+const Conclusion = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConnectedConclusion);
 export default Conclusion;
 
 ConnectedConclusion.propTypes = {
-    cardArray: PropTypes.arrayOf(PropTypes.string)
-}
+    cardArray: PropTypes.arrayOf(PropTypes.string),
+    onClick: PropTypes.func
+};
+
+ConnectedConclusion.defaultProps = {
+    cardArray: [""],
+    onClick: () => {}
+};
