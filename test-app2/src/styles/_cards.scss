@@ -34,15 +34,16 @@
 
         &.face-down {
             border-color: darken($Teal, 10%);
-            background: darken($VeryLightGrey,5%);
-            color: darken($VeryLightGrey,5%);
+            background: darken($VeryLightGrey, 5%);
+            color: darken($VeryLightGrey, 5%);
             cursor: auto;
         }
 
-        &.removed, &.removed:hover {
+        &.removed,
+        &.removed:hover {
             border-style: dashed;
             border-color: $MedGrey;
-            background: lighten($LightGrey,15%);
+            background: lighten($LightGrey, 15%);
             color: $MedGrey;
             cursor: not-allowed;
         }

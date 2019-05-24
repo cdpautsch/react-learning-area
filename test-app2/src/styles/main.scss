@@ -1,15 +1,19 @@
-@import 'theme';
-@import 'variables';
-@import 'mixins';
-@import 'cards';
-@import 'hangman';
+@charset "utf-8";
+@import "theme";
+@import "variables";
+@import "mixins";
+@import "cards";
+@import "hangman";
 
 body {
     background: $OffWhite;
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: "Roboto", Arial, sans-serif;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     letter-spacing: 1px;
     margin: 0.5rem 0.5rem 0.5rem 1rem;
 }
@@ -45,7 +49,8 @@ h1, h2, h3, h4 {
         text-decoration: none;
         border: 2px solid $DarkBlue;
 
-        &:hover, &.active {
+        &:hover,
+        &.active {
             background: $DarkBlue;
             color: $White;
         }
@@ -58,7 +63,8 @@ div.color-bar {
     height: 0.5rem;
 }
 
-button, input[type=submit] {
+button,
+input[type="submit"] {
     border-width: 2px;
     border-style: solid;
     @include borderRadius($global-radius);
@@ -69,16 +75,17 @@ button, input[type=submit] {
         border-color: $Grey;
     }
 
-    &:disabled, &:disabled:hover {
+    &:disabled,
+    &:disabled:hover {
         color: $MedGrey;
         border-color: $AltGrey;
         cursor: not-allowed;
-    } 
+    }
 }
 
 .game-intro {
     margin: 0.75rem;
-    
+
     p {
         font-size: 0.875rem;
     }
