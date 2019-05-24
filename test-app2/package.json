@@ -31,6 +31,9 @@
     }
   },
   "lint-staged": {
+    "src/**/*.{scss,sass,css}": [
+      "stylelint --config ./config/.stylelintrc.json --ignore-path ./config/.stylelintignore"
+    ],
     "src/**/*.{js,jsx}": [
       "eslint"
     ],
