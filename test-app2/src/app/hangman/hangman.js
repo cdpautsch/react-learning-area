@@ -6,13 +6,7 @@ import uuidv1 from "uuid";
 import HangmanLetter from "./hangmanLetter";
 import HangmanDrawing from "./hangmanDrawing";
 
-function mapStateToProps(state) {
-    return {
-        rightLetters: state.hangmanState.rightLetters
-    };
-}
-
-class ConnectedHangman extends React.Component {
+class Hangman extends React.Component {
     constructor(props) {
         super(props);
 
@@ -44,13 +38,18 @@ class ConnectedHangman extends React.Component {
     }
 }
 
-const Hangman = connect(mapStateToProps)(ConnectedHangman);
-export default Hangman;
+export default connect(mapStateToProps)(Hangman);
 
-ConnectedHangman.propTypes = {
+function mapStateToProps(state) {
+    return {
+        rightLetters: state.hangmanState.rightLetters
+    };
+}
+
+Hangman.propTypes = {
     rightLetters: PropTypes.arrayOf(PropTypes.string)
 };
 
-ConnectedHangman.defaultProps = {
+Hangman.defaultProps = {
     rightLetters: []
 };

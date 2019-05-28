@@ -5,23 +5,7 @@ import PropTypes from "prop-types";
 import { resetHangman } from "./redux";
 import { MAX_WRONG_ANSWERS } from "./utils/constants";
 
-function mapStateToProps(state) {
-    return {
-        numEmptyLetters:
-            state.hangmanState.rightLetters.length -
-            state.hangmanState.rightLetters.filter(String).length,
-        numWrongLetters: state.hangmanState.wrongLetters.length,
-        guessWord: state.hangmanState.guessWord
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        resetAction: () => dispatch(resetHangman())
-    };
-}
-
-class ConnectedHangmanConclusion extends React.Component {
+class HangmanConclusion extends React.Component {
     renderResults(resultClass, resultMessage) {
         const { resetAction } = this.props;
         return (
@@ -54,20 +38,35 @@ class ConnectedHangmanConclusion extends React.Component {
     }
 }
 
-const HangmanConclusion = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConnectedHangmanConclusion);
-export default HangmanConclusion;
+)(HangmanConclusion);
 
-ConnectedHangmanConclusion.propTypes = {
+function mapStateToProps(state) {
+    return {
+        numEmptyLetters:
+            state.hangmanState.rightLetters.length -
+            state.hangmanState.rightLetters.filter(String).length,
+        numWrongLetters: state.hangmanState.wrongLetters.length,
+        guessWord: state.hangmanState.guessWord
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        resetAction: () => dispatch(resetHangman())
+    };
+}
+
+HangmanConclusion.propTypes = {
     numEmptyLetters: PropTypes.number,
     numWrongLetters: PropTypes.number,
     guessWord: PropTypes.string,
     resetAction: PropTypes.func
 };
 
-ConnectedHangmanConclusion.defaultProps = {
+HangmanConclusion.defaultProps = {
     numEmptyLetters: 1,
     numWrongLetters: 0,
     guessWord: "SOMETHING",

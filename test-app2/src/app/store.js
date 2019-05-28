@@ -19,11 +19,3 @@ const store = createStore(
     )
 );
 export default store;
-
-// const store = createStore(
-//     rootReducer,
-//     // Disabling ESLint for this line
-//     // Redux devtools is written as specified by documentation
-//     // eslint-disable-next-line no-underscore-dangle
-//     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-// );

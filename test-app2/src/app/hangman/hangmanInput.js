@@ -5,23 +5,7 @@ import PropTypes from "prop-types";
 import { guessLetter } from "./redux";
 import { MAX_WRONG_ANSWERS } from "./utils/constants";
 
-function mapStateToProps(state) {
-    return {
-        gameOver:
-            state.hangmanState.wrongLetters.length >= MAX_WRONG_ANSWERS ||
-            state.hangmanState.rightLetters.length -
-                state.hangmanState.rightLetters.filter(String).length <=
-                0
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        guessAction: letter => dispatch(guessLetter(letter))
-    };
-}
-
-class ConnectedHangmanInput extends React.Component {
+class HangmanInput extends React.Component {
     constructor(props) {
         super(props);
 
@@ -92,18 +76,33 @@ class ConnectedHangmanInput extends React.Component {
     }
 }
 
-const HangmanInput = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConnectedHangmanInput);
-export default HangmanInput;
+)(HangmanInput);
 
-ConnectedHangmanInput.propTypes = {
+function mapStateToProps(state) {
+    return {
+        gameOver:
+            state.hangmanState.wrongLetters.length >= MAX_WRONG_ANSWERS ||
+            state.hangmanState.rightLetters.length -
+                state.hangmanState.rightLetters.filter(String).length <=
+                0
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        guessAction: letter => dispatch(guessLetter(letter))
+    };
+}
+
+HangmanInput.propTypes = {
     gameOver: PropTypes.bool,
     guessAction: PropTypes.func
 };
 
-ConnectedHangmanInput.defaultProps = {
+HangmanInput.defaultProps = {
     gameOver: true,
     guessAction: () => {}
 };

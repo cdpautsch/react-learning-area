@@ -5,19 +5,7 @@ import PropTypes from "prop-types";
 import { resetCards } from "./redux";
 import { DEFAULT_CARD_NUM } from "./utils/constants";
 
-function mapStateToProps(state) {
-    return {
-        currentCardNum: state.cardState.cardArray.length
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        resetAction: numCards => dispatch(resetCards(numCards))
-    };
-}
-
-export class ConnectedCardsInput extends React.Component {
+export class CardsInput extends React.Component {
     constructor(props) {
         super(props);
 
@@ -81,18 +69,29 @@ export class ConnectedCardsInput extends React.Component {
     }
 }
 
-const CardsInput = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConnectedCardsInput);
-export default CardsInput;
+)(CardsInput);
 
-ConnectedCardsInput.propTypes = {
+function mapStateToProps(state) {
+    return {
+        currentCardNum: state.cardState.cardArray.length
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        resetAction: numCards => dispatch(resetCards(numCards))
+    };
+}
+
+CardsInput.propTypes = {
     currentCardNum: PropTypes.number,
     resetAction: PropTypes.func
 };
 
-ConnectedCardsInput.defaultProps = {
+CardsInput.defaultProps = {
     currentCardNum: DEFAULT_CARD_NUM,
     resetAction: () => {}
 };

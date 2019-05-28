@@ -5,19 +5,7 @@ import PropTypes from "prop-types";
 import { removeCard } from "./redux";
 import Card from "./card";
 
-function mapStateToProps(state) {
-    return {
-        cardArray: state.cardState.cardArray
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        onClick: index => dispatch(removeCard(index))
-    };
-}
-
-export class ConnectedCardsDeck extends React.Component {
+export class CardsDeck extends React.Component {
     renderCards(cardArray) {
         const { onClick } = this.props;
 
@@ -41,18 +29,29 @@ export class ConnectedCardsDeck extends React.Component {
     }
 }
 
-const CardsDeck = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConnectedCardsDeck);
-export default CardsDeck;
+)(CardsDeck);
 
-ConnectedCardsDeck.propTypes = {
+function mapStateToProps(state) {
+    return {
+        cardArray: state.cardState.cardArray
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onClick: index => dispatch(removeCard(index))
+    };
+}
+
+CardsDeck.propTypes = {
     cardArray: PropTypes.arrayOf(PropTypes.string),
     onClick: PropTypes.func
 };
 
-ConnectedCardsDeck.defaultProps = {
+CardsDeck.defaultProps = {
     cardArray: ["Up"],
     onClick: () => {}
 };

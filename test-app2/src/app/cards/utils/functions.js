@@ -1,8 +1,19 @@
-export function flipCard(cardValue) {
-    if (cardValue !== "Removed") {
-        return cardValue === "Down" ? "Up" : "Down";
+export function createNewArray(length) {
+    const newArray = Array(length).fill(null);
+    let countUp = 0;
+
+    for (let i = 0; i < length; i++) {
+        newArray[i] = Math.floor(Math.random() * 2) === 1 ? "Up" : "Down";
+        countUp += newArray[i] === "Up" ? 1 : 0;
     }
-    return cardValue;
+
+    // Ensures at least one cell is face-up
+    if (countUp === 0) {
+        const n = Math.floor(Math.random() * 6);
+        newArray[n] = "Up";
+    }
+
+    return newArray;
 }
 
 export function removeAndFlipCards(cardArray, indexToRemove) {
@@ -26,20 +37,9 @@ export function removeAndFlipCards(cardArray, indexToRemove) {
     return cardArray;
 }
 
-export function createNewArray(length) {
-    const newArray = Array(length).fill(null);
-    let countUp = 0;
-
-    for (let i = 0; i < length; i++) {
-        newArray[i] = Math.floor(Math.random() * 2) === 1 ? "Up" : "Down";
-        countUp += newArray[i] === "Up" ? 1 : 0;
+export function flipCard(cardValue) {
+    if (cardValue !== "Removed") {
+        return cardValue === "Down" ? "Up" : "Down";
     }
-
-    // Ensures at least one cell is face-up
-    if (countUp === 0) {
-        const n = Math.floor(Math.random() * 6);
-        newArray[n] = "Up";
-    }
-
-    return newArray;
+    return cardValue;
 }

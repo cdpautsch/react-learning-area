@@ -4,13 +4,7 @@ import PropTypes from "prop-types";
 
 import hangmanBodyPaths from "./utils/hangmanBodyPaths";
 
-function mapStateToProps(state) {
-    return {
-        numberWrongAnswers: state.hangmanState.wrongLetters.length
-    };
-}
-
-class ConnectedHangmanDrawing extends React.Component {
+class HangmanDrawing extends React.Component {
     renderHangmanBody(numberWrongAnswers) {
         return hangmanBodyPaths.slice(0, numberWrongAnswers);
     }
@@ -49,13 +43,18 @@ class ConnectedHangmanDrawing extends React.Component {
     }
 }
 
-const HangmanDrawing = connect(mapStateToProps)(ConnectedHangmanDrawing);
-export default HangmanDrawing;
+export default connect(mapStateToProps)(HangmanDrawing);
 
-ConnectedHangmanDrawing.propTypes = {
+function mapStateToProps(state) {
+    return {
+        numberWrongAnswers: state.hangmanState.wrongLetters.length
+    };
+}
+
+HangmanDrawing.propTypes = {
     numberWrongAnswers: PropTypes.number
 };
 
-ConnectedHangmanDrawing.defaultProps = {
+HangmanDrawing.defaultProps = {
     numberWrongAnswers: 0
 };

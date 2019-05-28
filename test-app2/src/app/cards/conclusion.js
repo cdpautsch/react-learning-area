@@ -4,19 +4,7 @@ import PropTypes from "prop-types";
 
 import { resetCards } from "./redux";
 
-function mapStateToProps(state) {
-    return {
-        cardArray: state.cardState.cardArray
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        onClick: numCards => dispatch(resetCards(numCards))
-    };
-}
-
-export class ConnectedConclusion extends React.Component {
+export class Conclusion extends React.Component {
     renderResults(resultClass, resultMessage) {
         const { onClick } = this.props;
         const { cardArray } = this.props;
@@ -45,18 +33,29 @@ export class ConnectedConclusion extends React.Component {
     }
 }
 
-const Conclusion = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConnectedConclusion);
-export default Conclusion;
+)(Conclusion);
 
-ConnectedConclusion.propTypes = {
+function mapStateToProps(state) {
+    return {
+        cardArray: state.cardState.cardArray
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onClick: numCards => dispatch(resetCards(numCards))
+    };
+}
+
+Conclusion.propTypes = {
     cardArray: PropTypes.arrayOf(PropTypes.string),
     onClick: PropTypes.func
 };
 
-ConnectedConclusion.defaultProps = {
+Conclusion.defaultProps = {
     cardArray: [""],
     onClick: () => {}
 };

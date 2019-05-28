@@ -4,13 +4,7 @@ import PropTypes from "prop-types";
 
 import HangmanLetter from "./hangmanLetter";
 
-function mapStateToProps(state) {
-    return {
-        wrongLetters: state.hangmanState.wrongLetters
-    };
-}
-
-class ConnectedHangmanWrong extends React.Component {
+class HangmanWrong extends React.Component {
     renderWrongLetters(letterArray) {
         return letterArray.map((letter, index) => {
             return (
@@ -37,13 +31,18 @@ class ConnectedHangmanWrong extends React.Component {
     }
 }
 
-const HangmanWrong = connect(mapStateToProps)(ConnectedHangmanWrong);
-export default HangmanWrong;
+export default connect(mapStateToProps)(HangmanWrong);
 
-ConnectedHangmanWrong.propTypes = {
+function mapStateToProps(state) {
+    return {
+        wrongLetters: state.hangmanState.wrongLetters
+    };
+}
+
+HangmanWrong.propTypes = {
     wrongLetters: PropTypes.arrayOf(PropTypes.string)
 };
 
-ConnectedHangmanWrong.defaultProps = {
+HangmanWrong.defaultProps = {
     wrongLetters: []
 };
