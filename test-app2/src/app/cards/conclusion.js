@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-class ConnectedConclusion extends React.Component {
+export class ConnectedConclusion extends React.Component {
     renderResults(resultClass, resultMessage) {
         const { onClick } = this.props;
         const { cardArray } = this.props;

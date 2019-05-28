@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-class ConnectedCardsDeck extends React.Component {
+export class ConnectedCardsDeck extends React.Component {
     renderCards(cardArray) {
         const { onClick } = this.props;
 

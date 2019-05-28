@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-class ConnectedCardsInput extends React.Component {
+export class ConnectedCardsInput extends React.Component {
     constructor(props) {
         super(props);
 

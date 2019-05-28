@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import resetHangman from "../actions/resetHangman";
-import { MAX_WRONG_ANSWERS } from "../constants/globalConstants";
+import { resetHangman } from "./redux";
+import { MAX_WRONG_ANSWERS } from "./utils/constants";
 
 function mapStateToProps(state) {
     return {

@@ -1,8 +1,17 @@
-import { GUESS_LETTER, RESET_HANGMAN } from "../constants/actionTypes";
-import initialHangmanState from "../constants/initialState";
-import addCorrectGuess from "../functions/addCorrectGuess";
-import addWrongGuess from "../functions/addWrongGuess";
-import getNewRightLetters from "../functions/getNewRightLetters";
+import { GUESS_LETTER, RESET_HANGMAN } from "./types";
+import addCorrectGuess from "../utils/addCorrectGuess";
+import addWrongGuess from "../utils/addWrongGuess";
+import getNewRightLetters from "../utils/getNewRightLetters";
+
+import getNewGuessWord from "../utils/getNewGuessWord";
+
+const initialGuessWord = getNewGuessWord();
+
+export const initialHangmanState = {
+    wrongLetters: [],
+    rightLetters: getNewRightLetters(initialGuessWord),
+    guessWord: initialGuessWord
+};
 
 function hangmanReducer(state = initialHangmanState, action) {
     switch (action.type) {

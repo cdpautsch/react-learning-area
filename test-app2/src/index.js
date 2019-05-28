@@ -15,7 +15,7 @@ import Navbar from "./app/common/navbar";
 import CardsGame from "./app/cards/cardsGame";
 
 // Hangman Game
-import HangmanGame from "./app/hangman/components/hangmanGame";
+import HangmanGame from "./app/hangman/hangmanGame";
 
 // Styles
 import "./styles/main.scss";

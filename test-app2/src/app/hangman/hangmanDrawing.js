@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import hangmanBodyPaths from "../constants/hangmanBodyPaths";
+import hangmanBodyPaths from "./utils/hangmanBodyPaths";
 
 function mapStateToProps(state) {
     return {
