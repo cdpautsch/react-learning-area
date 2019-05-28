@@ -1,3 +1,58 @@
+LEARNING TEST-APP2 v3
+========================================
+GOAL: setup ReactJS project _without_ using a pre-built boilerplate
+1.  create directory
+2.  initialize for npm
+        npm init -y
+3.  add directories & base files
+        /src
+            /styles
+            /components
+            index.js
+            index.html
+        /dist
+
+        (index.html will be used as a template, you do not need to import any other files)
+5.  install packages
+        webpack
+            npm install --save-dev webpack webpack-dev-server webpack-cli
+        babel
+            npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
+        webpack plugins
+            npm install --save-dev html-webpack-plugin mini-css-extract-plugin clean-webpack-plugin
+        react
+            npm install react react-dom react-router-dom prop-types
+        redux
+            npm install redux react-redux redux-logger redux-thunk
+            npm install --save-dev redux-devtools
+        sass
+            npm install --save-dev css-loader sass-loader node-sass
+        linting (ES6)
+            npm install --save-dev prettier eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-import-resolver-webpack eslint-config-prettier eslint-plugin-prettier
+        linting (sass)
+            npm install --save-dev stylelint stylelint-config-prettier stylelint-config-recommended-scss stylelint-prettier stylelint-scss
+        git linting
+            npm install --save-dev husky lint-staged
+        other
+            npm install --save-dev html-loader
+            npm install uuid
+        TOTAL
+            npm install --save-dev webpack webpack-dev-server webpack-cli @babel/core @babel/preset-env @babel/preset-react babel-loader html-webpack-plugin mini-css-extract-plugin clean-webpack-plugin redux-devtools css-loader sass-loader node-sass html-loader
+            npm install react react-dom react-router-dom redux react-redux prop-types uuid
+6.  create `webpack.config.js`
+    (see boilerplate)
+11. create react code
+15. import SCSS into JS
+        import styles from './styles/main.scss';
+        (this is needed so that Webpack recognizes the dependency)
+XX. start it up
+        npm start
+        (access at `localhost:8080`)
+
+
+
+
+
 LEARNING TEST-APP2 v2
 ========================================
 (putting together everything I know, I think)
