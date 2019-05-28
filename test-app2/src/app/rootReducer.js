@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 
-import cardReducer from "./cards/reducers/cardReducer";
+import cardReducer from "./cards/redux";
 import hangmanReducer from "./hangman/reducers/hangmanReducer";
 
 const rootReducer = combineReducers({

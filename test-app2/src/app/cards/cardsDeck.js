@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import removeCard from "../actions/removeCard";
+import { removeCard } from "./redux";
 import Card from "./card";
 
 function mapStateToProps(state) {

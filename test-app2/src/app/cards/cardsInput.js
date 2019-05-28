@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import resetCards from "../actions/resetCards";
-import { DEFAULT_CARD_NUM } from "../constants/globalConstants";
+import { resetCards } from "./redux";
+import { DEFAULT_CARD_NUM } from "./utils/constants";
 
 function mapStateToProps(state) {
     return {

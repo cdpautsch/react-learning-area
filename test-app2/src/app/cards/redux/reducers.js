@@ -1,17 +1,21 @@
-import { REMOVE_CARD, RESET_CARDS } from "../constants/actionTypes";
-import { removeAndFlipCards } from "../functions/cardFunctions";
-import initialCardState from "../constants/initialState";
+import * as types from "./types";
+import { removeAndFlipCards, createNewArray } from "../utils/functions";
+import { DEFAULT_CARD_NUM } from "../utils/constants";
+
+const initialCardState = {
+    cardArray: createNewArray(DEFAULT_CARD_NUM)
+};
 
 function cardReducer(state = initialCardState, action) {
     switch (action.type) {
-        case REMOVE_CARD:
+        case types.REMOVE_CARD:
             return Object.assign({}, state, {
                 cardArray: removeAndFlipCards(
                     state.cardArray.slice(),
                     action.cardId
                 )
             });
-        case RESET_CARDS:
+        case types.RESET_CARDS:
             return Object.assign({}, state, {
                 cardArray: action.cardArray
             });
