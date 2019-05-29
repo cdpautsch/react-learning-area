@@ -4,9 +4,9 @@
   "description": "Test app for setting up React from scratch",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "build": "webpack --mode production",
-    "build-full": "npm run lint && npm test && webpack --mode production",
+    "start": "webpack-dev-server --config ./config/webpack.config.js --mode development",
+    "build": "npm run lint && npm test && webpack --config ./config/webpack.config.js --mode production",
+    "build-only": "webpack --config ./config/webpack.config.js --mode production",
     "lint": "npm run lint-code && npm run lint-css",
     "lint-code": "eslint src -c .eslintrc.json --ext js,jsx",
     "lint-css": "stylelint \"./src/**/*.scss\" --config ./config/.stylelintrc.json --ignore-path ./config/.stylelintignore",

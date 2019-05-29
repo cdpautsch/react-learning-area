@@ -2,9 +2,10 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const path = require("path");
 
-const SRC_DIR = `${__dirname}/src`;
-const DIST_DIR = `${__dirname}/dist`;
+const SRC_DIR = path.resolve(__dirname, "../src");
+const DIST_DIR = path.resolve(__dirname, "../dist");
 
 module.exports = (_env, argv) => ({
     entry: `${SRC_DIR}/index.js`,
@@ -70,7 +71,7 @@ module.exports = (_env, argv) => ({
         filename: "bundle.js"
     },
     devServer: {
-        contentBase: "./dist",
+        contentBase: "../dist",
         inline: true,
         hot: true,
         historyApiFallback: true,
