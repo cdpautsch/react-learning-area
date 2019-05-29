@@ -1,6 +1,6 @@
 {
     "extends": ["airbnb", "prettier", "prettier/react"],
-    "plugins": ["react", "prettier"],
+    "plugins": ["react", "jest", "prettier"],
     "rules": {
         "react/jsx-filename-extension": [
             1,
@@ -17,7 +17,8 @@
         "import/no-named-as-default": 0
     },
     "env": {
-        "browser": true
+        "browser": true,
+        "jest": true
     },
     "settings": {
         "import/resolver": {

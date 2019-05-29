@@ -5,7 +5,7 @@ import getNewRightLetters from "../utils/getNewRightLetters";
 
 import getNewGuessWord from "../utils/getNewGuessWord";
 
-const initialGuessWord = getNewGuessWord();
+export const initialGuessWord = getNewGuessWord();
 
 export const initialHangmanState = {
     wrongLetters: [],

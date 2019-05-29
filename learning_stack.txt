@@ -284,3 +284,138 @@ https://www.codementor.io/valentinrad/roll-your-own-tiny-react-environment-using
 * Use:
     npm install file-loader
     npm install url-loader
+
+
+
+TESTING
+=================================================
+https://redux.js.org/recipes/writing-tests
+Testing in Jest: https://jestjs.io/
+* Install:
+    npm install --save-dev jest babel-jest
+* Update `.babelrc`:
+    "presets": ["@babel/preset-env"]
+* Update scripts in `package.json`:
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
+* Action Creators: we want to test if correct action creator was called, and if the right action was returned
+    import * as actions from ...
+    import * as types from ...
+    describe('actions', () => {
+        it('should create an action to add a todo', () => {
+            const text = 'Finish docs'
+            const expectedAction = {
+                type: types.ADD_TODO,
+                text
+            }
+            expect(actions.addTodo(text)).toEqual(expectedAction)
+        })
+    })
+
+* Reducers: should return new state after applying action to the previous state
+    import reducer from ...
+    import * as types from ...
+    describe('todos reducer', () => {
+        it('should return the initial state', () => {
+            expect(reducer(undefined, {})).toEqual([
+                {
+                    text: 'Use Redux',
+                    completed: false,
+                    id: 0
+                }
+            ])
+        })
+
+        it('should handle ADD_TODO', () => {
+            expect(
+                reducer([], {
+                    type: types.ADD_TODO,
+                    text: 'Run the tests'
+                })
+            ).toEqual([
+                {
+                    text: 'Run the tests',
+                    completed: false,
+                    id: 0
+                }
+            ])
+
+            expect(
+                reducer(
+                    [
+                        {
+                            text: 'Use Redux',
+                            completed: false,
+                            id: 0
+                        }
+                    ],
+                    {
+                        type: types.ADD_TODO,
+                        text: 'Run the tests'
+                    }
+                ).toEqual([
+                    {
+                        text: 'Run the tests',
+                        completed: false,
+                        id: 1
+                    },
+                    {
+                        text: 'Use Redux',
+                        completed: false,
+                        id: 0
+                    }
+                ])
+            )
+        })
+    })
+
+* Components: 
+    * Requires Enzyme: https://airbnb.io/enzyme/
+        npm install --save-dev enzyme enzyme-adapter-react-16
+    * Test with:
+
+    import React from 'react';
+    import Enzyme, { shallow } from 'enzyme';
+    import Adapter from 'enzyme-adapter-react-16';
+    import Header from ...
+
+    Enzyme.configure({ adapter: new Adapter() });
+
+    function setup() {
+        const props = {
+            addTodo: jest.fn();
+        };
+
+        const enzymeWrapper = shallow(<Header {...props} />);
+
+        return {
+            props, enzymeWrapper
+        };
+    }
+
+    describe('components', () => {
+        describe('Header', () => {
+            it('should render self and subcomponents', () => {
+                const { enzymeWrapper } = setup();
+
+                expect(enzymeWrapper.find('header').hasClass('header')).toBe(true);
+
+                expect(enzymeWrapper.find('h1').text()).toBe('todos');
+
+                const todoInputProps = enzymeWrapper.find('TodoTextInput').props();
+                expect(todoInputProps.newTodo).toBe(true);
+                expect(todoInputProps.placeholder).toEqual('What needs to be done?');
+            })
+
+            it('should call addTodo if length of text is greater than 0', () => {
+                const { enzymeWrapper, props } = setup();
+                const input = enzymeWrapper.fid('TodoTextInput');
+                input.props().onSave('');
+                expect(props.addTodo.mock.calls.length).toBe(0);
+                input.props().onSave('Use Redux');
+                expect(props.addTodo.mock.calls.length).toBe(1);
+            })
+        })
+    })
+
+* Connected Components

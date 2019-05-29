@@ -2,7 +2,7 @@ import * as types from "./types";
 import { removeAndFlipCards, createNewArray } from "../utils/functions";
 import { DEFAULT_CARD_NUM } from "../utils/constants";
 
-const initialCardState = {
+export const initialCardState = {
     cardArray: createNewArray(DEFAULT_CARD_NUM)
 };
 
