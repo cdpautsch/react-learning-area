@@ -33,6 +33,8 @@ GOAL: setup ReactJS project _without_ using a pre-built boilerplate
             npm install --save-dev stylelint stylelint-config-prettier stylelint-config-recommended-scss stylelint-prettier stylelint-scss
         git linting
             npm install --save-dev husky lint-staged
+        testing
+            npm install --save-dev jest babel-jest eslint-plugin-jest
         other
             npm install --save-dev html-loader
             npm install uuid

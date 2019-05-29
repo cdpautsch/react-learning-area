@@ -3,11 +3,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
-const devMode = process.env.NODE_ENV !== "production";
 const SRC_DIR = `${__dirname}/src`;
 const DIST_DIR = `${__dirname}/dist`;
 
-module.exports = {
+module.exports = (_env, argv) => ({
     entry: `${SRC_DIR}/index.js`,
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
@@ -16,10 +15,10 @@ module.exports = {
             filename: "./index.html"
         }),
         new MiniCssExtractPlugin({
-            // filename: devMode ? '[name].css' : '[name].[hash].css',
-            // chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
-            filename: "[name].css",
-            chunkFilename: "[id].css"
+            filename:
+                argv.mode !== "production" ? "[name].css" : "[name].[hash].css",
+            chunkFilename:
+                argv.mode !== "production" ? "[id].css" : "[id].[hash].css"
         }),
         new CleanWebpackPlugin()
     ],
@@ -34,14 +33,18 @@ module.exports = {
                 test: /\.(scss|sass|css)$/,
                 exclude: /node_modules/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: argv.mode !== "production"
+                        }
+                    },
                     {
                         loader: "css-loader",
                         options: {
                             modules: true,
-                            sourceMap: devMode,
+                            sourceMap: argv.mode !== "production",
                             importLoaders: 1,
-                            // localIdentName: '[path][name]__[local]--[hash:base64:5]'
                             localIdentName: "[local]"
                         }
                     },
@@ -73,4 +76,4 @@ module.exports = {
         historyApiFallback: true,
         port: 8713
     }
-};
+});
