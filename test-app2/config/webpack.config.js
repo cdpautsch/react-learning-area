@@ -72,6 +72,7 @@ module.exports = (_env, argv) => ({
     },
     devServer: {
         contentBase: "../dist",
+        open: true,
         inline: true,
         hot: true,
         historyApiFallback: true,

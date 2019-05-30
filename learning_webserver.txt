@@ -1,0 +1,175 @@
+LEARNING THE WEBSERVER
+=======================================
+https://stackoverflow.com/questions/36636790/how-node-js-is-different-from-tomcat
+(trying to wrap my head around the difference...)
+
+SERVER-SIDE RENDERING IN REACT
+-------------------------------------------
+https://www.freecodecamp.org/news/demystifying-reacts-server-side-render-de335d408fe4/
+https://dev.to/mladenstojanovic/what-is-react-server-side-rendering-and-should-i-use-it-5b7i
+https://blog.logrocket.com/why-you-should-render-react-on-the-server-side-a50507163b79
+
+
+EXPRESS JS & NODE
+--------------------------------------------
+https://expressjs.com/
+* Install
+    npm install express
+* package.json
+    "main": "index.js"
+* Hello World Example
+    const express = require('express' 4.17 1 );
+    const app = express();
+    const port = 3000;
+
+    app.get("/", (req, res) => res.send("Hello world!"));
+
+    app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+* Routing definition
+    app.METHOD(PATH, HANDLER)
+        app = instance of express
+        METHOD = HTTP request method in lowercase
+        PATH = path on server
+        HANDLER = function executed when route is matched
+* Serving static files (images, CSS, JS)
+    express.static(root, [options])
+
+    app.use(express.static('public'))
+    (for files in directory `public/`)
+* Handling 404 responses
+    app.use(function (req, res, next) {
+        res.status(404).send("Sorry can't find that!")
+    })
+* Error handler
+    app.use(function (err, req, res, next) {
+        console.error(err.stack)
+        res.status(500).send('Something broke!')
+    })
+* Routing
+    * `app.get/post()` --> handle all get or post requests
+    * `app.all()` --> handle _all_ types of requests
+    * `app.use()` --> specifies middleware as the callback function
+    * All these methods specify a callback function, called when the app receives a request to the specified route (endpoint) and HTTP method
+    * Route Handlers
+        * You can have multiple callbacks
+        * Example
+            app.get('/example/', function (req, res, next) {
+                console.log("response sent by next func...");
+                next();
+            }, function (req, res) {
+                res.send("Hello from second handler!")
+            });
+        * Example (with arrays)
+            // functions a(), b(), and c()
+            app.get('/example/', [a, b, c]);
+        * You can also re-route to a different route, preventing further event handlers on the current route to execute
+    * Response Methods:
+        * res.download()
+        * res.end()
+        * res.json()
+        * res.redirect()
+        * res.send()
+        * res.sendFile()
+    * app.route()
+        * Example:
+            app.route('/example')
+                .get(function (req, res) {
+                    res.send('get something')
+                })
+                .post(function (req, res) {
+                    res.send('post something')
+                })
+                .put(function (req, res) {
+                    res.send('put something')
+                })
+    * express.Router()
+        * (see the docs)
+
+
+https://hackernoon.com/full-stack-web-application-using-react-node-js-express-and-webpack-97dbd5b9d708
+* Install
+    npm install express
+    npm install --save-dev nodemon
+* Update `.eslintrc.json`
+    "env": {
+        "node": true
+    }
+* Create `nodemon.json`
+    {
+        "watch": ["src/server/"]
+    }
+* Create `src/server/index.js`:
+    const express = require("express");
+    const app = express();
+    const os = require("os");
+
+    app.use(express.static("dist"));
+    app.get("/api/getUsername", (req, res) =>
+        res.send({ username: os.userInfo().username })
+    );
+    app.listen(8080, () => console.log("Listening on port 8080!"));
+* Install `concurrently` to be able to run both webpack-dev-server and nodemon simultaneously:
+    npm install --save-dev concurrently
+
+    (example)
+    "build": "webpack --mode production",
+
+    "start": "npm run build && node src/server/index.js",
+
+    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
+
+    "server": "nodemon src/server/index.js",
+
+    "dev-script": "concurrently \"npm run server\" \"npm run client\""
+
+
+https://levelup.gitconnected.com/how-to-setup-environment-using-react-webpack-express-babel-d5f1b572b678
+* Create `server.js`:
+    const express = require("express");
+    const app = express();
+
+    app.get('/', (req, res) => res.send("HELLO"));
+    app.use(express.static('public'));
+
+    app.listen(3000, () => console.log("Example app listening on port 3000"));
+* Run with:
+    node server.js
+* Install:
+    @babel/node
+    Why? the same CLI as Node.js CLI + compiling with Babel presets and plugins before running
+    Shouldn't be used in production... so why should we use it?
+
+https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3
+* Create `index.js` for server:
+    const express = require("express");
+    const path = require("path");
+
+    const app = express();
+
+    // serve static files from React app
+    app.use(express.static(path.join(__dirname, 'client/build)));
+
+    const port = process.env.PORT || 5000;
+    app.listen(port);
+    console.log(`App is listening on port ${port}`);
+
+
+https://stackoverflow.com/questions/11321635/nodejs-express-what-is-app-use
+Explains `app.use()` and middleware a bit
+
+
+
+
+OTHER EXPRESS LINKS
+https://medium.com/@baphemot/understanding-react-deployment-5a717d4378fd
+
+
+
+https://nodemon.io/
+For restarting the server when you change things
+(back-end equivalent of webpack-dev-server)
+
+
+
+FUTURE WORK:
+* Update Webpack HtmlWebpackPlugin to add favicon

@@ -5,6 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.config.js --mode development",
+    "start-prod": "npm run build && node src/server/server.js",
+    "client-dev": "webpack-dev-server --mode development --devtool inline-source-map --hot",
+    "server-dev": "nodemon --config ./config/nodemon.json --watch src/server src/server/server.js",
+    "server-dev-temp": "nodemon --config ./config/nodemon.json src/server/server.js",
+    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
     "build": "npm run lint && npm test && webpack --config ./config/webpack.config.js --mode production",
     "build-only": "webpack --config ./config/webpack.config.js --mode production",
     "lint": "npm run lint-code && npm run lint-css",
@@ -51,6 +56,7 @@
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^2.0.2",
+    "concurrently": "^4.1.0",
     "css-loader": "^2.1.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -68,6 +74,7 @@
     "lint-staged": "^8.1.7",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.12.0",
+    "nodemon": "^1.19.1",
     "prettier": "^1.17.1",
     "redux-devtools": "^3.5.0",
     "sass-loader": "^7.1.0",
@@ -81,6 +88,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

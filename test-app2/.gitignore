@@ -24,3 +24,8 @@ package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# SSL
+# Keys and certs should never be committed, even if used only for development
+*.cert
+*.key
