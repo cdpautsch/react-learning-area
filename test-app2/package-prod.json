@@ -1,0 +1,14 @@
+{
+  "name": "test-app2",
+  "version": "1.0.0",
+  "description": "Deployment package for server",
+  "main": "server.js",
+  "author": "cdpautsch",
+  "license": "ISC",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

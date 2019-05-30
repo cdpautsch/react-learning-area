@@ -1,19 +1,22 @@
 const express = require("express");
+const path = require("path");
 // const https = require("https");
 // const fs = require("fs");
 
 const app = express();
 
+const DIST_DIR = path.resolve("./dist");
+
 // Root Path
-app.use(express.static("./dist"));
+app.use(express.static(DIST_DIR));
 
 // Wildcard path for everything else (covers for React-Router)
 app.get("*", (req, res) => {
-    res.sendFile("./dist/index.html");
+    res.sendFile(path.resolve(DIST_DIR, "./index.html"));
 });
 
 // Standard server
-const server = app.listen(3000, "127.0.0.1", () => {
+const server = app.listen(3000, () => {
     const host = server.address().address;
     const { port } = server.address();
     console.log(`Test-App2 Server listening at http://${host}:${port}`);
