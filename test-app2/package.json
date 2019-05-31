@@ -8,7 +8,6 @@
     "start-prod": "npm run build && node src/server/server.js",
     "client-dev": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server-dev": "nodemon --config ./config/nodemon.json --watch src/server src/server/server.js",
-    "server-dev-temp": "nodemon --config ./config/nodemon.json src/server/server.js",
     "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
     "build": "npm run lint && npm test && webpack --config ./config/webpack.config.js --mode production",
     "build-only": "webpack --config ./config/webpack.config.js --mode production",
@@ -20,7 +19,7 @@
     "test": "jest --config ./config/jest.config.json",
     "test:watch": "npm test -- --watch"
   },
-  "keywords": [],
+  "keywords": ["react", "learning", "MERN"],
   "author": "cdpautsch",
   "license": "ISC",
   "babel": {

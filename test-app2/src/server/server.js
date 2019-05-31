@@ -19,6 +19,7 @@ app.get("*", (req, res) => {
 const server = app.listen(3000, () => {
     const host = server.address().address;
     const { port } = server.address();
+    // eslint-disable-next-line no-console
     console.log(`Test-App2 Server listening at http://${host}:${port}`);
 });
 
@@ -36,5 +37,6 @@ const server = app.listen(3000, () => {
 //     .listen(3000, "127.0.0.1", () => {
 //         const host = server.address().address;
 //         const { port } = server.address();
+//    // eslint-disable-next-line no-console
 //         console.log(`Test-App2 Server listening at https://${host}:${port}`);
 //     });
