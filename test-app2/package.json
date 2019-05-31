@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.config.js --mode development",
+    "start-node": "nodemon --config ./config/nodemon.json --watch src/server src/server/server.js",
     "start-prod": "npm run build && node src/server/server.js",
-    "client-dev": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "server-dev": "nodemon --config ./config/nodemon.json --watch src/server src/server/server.js",
-    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
+    "start-client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
+    "dev": "concurrently \"npm run start-node\" \"npm run start-client\"",
     "build": "npm run lint && npm test && webpack --config ./config/webpack.config.js --mode production",
     "build-only": "webpack --config ./config/webpack.config.js --mode production",
     "lint": "npm run lint-code && npm run lint-css",
