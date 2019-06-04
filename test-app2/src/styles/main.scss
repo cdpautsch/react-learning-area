@@ -4,6 +4,7 @@
 @import "mixins";
 @import "cards";
 @import "hangman";
+@import "home";
 
 body {
     background: $OffWhite;
@@ -16,6 +17,10 @@ h3,
 h4 {
     letter-spacing: 1px;
     margin: 0.5rem 0.5rem 0.5rem 1rem;
+}
+
+img {
+    max-width: 100%;
 }
 
 .content {

@@ -13,7 +13,8 @@ module.exports = (_env, argv) => ({
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             template: `${SRC_DIR}/index.html`,
-            filename: "./index.html"
+            filename: "./index.html",
+            favicon: `${SRC_DIR}/assets/favicons/favicon.ico`
         }),
         new MiniCssExtractPlugin({
             filename:
@@ -58,6 +59,31 @@ module.exports = (_env, argv) => ({
                 use: {
                     loader: "html-loader",
                     options: { minimize: true }
+                }
+            },
+            {
+                test: /\.(jpe?g|png|gif|ico)$/,
+                use: {
+                    loader: "url-loader",
+                    options: {
+                        limit: 8192,
+                        name:
+                            argv.mode !== "production"
+                                ? "[name].[ext]"
+                                : "[name].[hash].[ext]"
+                    }
+                }
+            },
+            {
+                test: /\.(eot|svg|ttf|woff2?|otf)$/,
+                use: {
+                    loader: "file-loader",
+                    options: {
+                        name:
+                            argv.mode !== "production"
+                                ? "[name].[ext]"
+                                : "[name].[hash].[ext]"
+                    }
                 }
             }
         ]

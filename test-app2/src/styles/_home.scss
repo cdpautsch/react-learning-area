@@ -1,0 +1,23 @@
+.home .my-logo {
+    display: block;
+    margin: auto;
+    width: 160px;
+}
+
+.home.content {
+    position: relative;
+
+    &::after {
+        content: "";
+        background: url(../assets/generic-background1.jpg);
+        opacity: 0.04;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
+}
