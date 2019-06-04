@@ -1,5 +1,5 @@
 function addWrongGuess(wrongLetters, guessLetter) {
-    if (wrongLetters.includes(guessLetter) || guessLetter === " ") {
+    if (wrongLetters.includes(guessLetter) || guessLetter === ' ') {
         return {
             wrongLetters
         };

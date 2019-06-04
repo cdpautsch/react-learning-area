@@ -1,5 +1,5 @@
-import * as types from "./types";
-import { createNewArray } from "../utils/functions";
+import * as types from './types';
+import { createNewArray } from '../utils/functions';
 
 export function removeCard(id) {
     return {

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import Conclusion from "./conclusion";
-import CardsDeck from "./cardsDeck";
-import CardsInput from "./cardsInput";
+import Conclusion from './conclusion';
+import CardsDeck from './cardsDeck';
+import CardsInput from './cardsInput';
 
 function CardsGame() {
     return (

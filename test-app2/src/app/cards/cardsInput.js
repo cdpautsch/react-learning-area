@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { resetCards } from "./redux";
-import { DEFAULT_CARD_NUM } from "./utils/constants";
+import { resetCards } from './redux';
+import { DEFAULT_CARD_NUM } from './utils/constants';
 
 export class CardsInput extends React.Component {
     constructor(props) {

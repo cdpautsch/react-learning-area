@@ -1,6 +1,6 @@
-import * as actions from "./actions";
-import * as types from "./types";
-import * as constants from "../utils/constants";
+import * as actions from './actions';
+import * as types from './types';
+import * as constants from '../utils/constants';
 
 expect.extend({
     toMatchAllArray(receivedArray, regex) {
@@ -22,8 +22,8 @@ expect.extend({
     }
 });
 
-describe("card actions", () => {
-    it("should return an object identifying the card to be marked as removed", () => {
+describe('card actions', () => {
+    it('should return an object identifying the card to be marked as removed', () => {
         const id = 1;
         const expectedAction = {
             type: types.REMOVE_CARD,
@@ -32,7 +32,7 @@ describe("card actions", () => {
         expect(actions.removeCard(id)).toEqual(expectedAction);
     });
 
-    it("should provide an entirely new set of cards upon reset", () => {
+    it('should provide an entirely new set of cards upon reset', () => {
         const cardNum = constants.DEFAULT_CARD_NUM;
         const expectedLength = cardNum;
         const expectedValueRegex = /Up|Down/;

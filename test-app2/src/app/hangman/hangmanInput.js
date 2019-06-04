@@ -1,16 +1,16 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { guessLetter } from "./redux";
-import { MAX_WRONG_ANSWERS } from "./utils/constants";
+import { guessLetter } from './redux';
+import { MAX_WRONG_ANSWERS } from './utils/constants';
 
 class HangmanInput extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            letterValue: ""
+            letterValue: ''
         };
 
         this.letterInput = React.createRef();
@@ -43,7 +43,7 @@ class HangmanInput extends React.Component {
         this.letterInput.current.focus();
 
         this.setState({
-            letterValue: ""
+            letterValue: ''
         });
     }
 
@@ -62,13 +62,13 @@ class HangmanInput extends React.Component {
                             value={letterValue}
                             onChange={this.handleChange}
                             ref={this.letterInput}
-                            disabled={gameOver ? "disabled" : ""}
+                            disabled={gameOver ? 'disabled' : ''}
                         />
                     </label>
                     <input
                         type="submit"
                         value="Submit"
-                        disabled={gameOver ? "disabled" : ""}
+                        disabled={gameOver ? 'disabled' : ''}
                     />
                 </form>
             </div>

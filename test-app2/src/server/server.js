@@ -1,18 +1,18 @@
-const express = require("express");
-const path = require("path");
+const express = require('express');
+const path = require('path');
 // const https = require("https");
 // const fs = require("fs");
 
 const app = express();
 
-const DIST_DIR = path.resolve("./dist");
+const DIST_DIR = path.resolve('./dist');
 
 // Root Path
 app.use(express.static(DIST_DIR));
 
 // Wildcard path for everything else (covers for React-Router)
-app.get("*", (req, res) => {
-    res.sendFile(path.resolve(DIST_DIR, "./index.html"));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(DIST_DIR, './index.html'));
 });
 
 // Standard server

@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { resetHangman } from "./redux";
-import { MAX_WRONG_ANSWERS } from "./utils/constants";
+import { resetHangman } from './redux';
+import { MAX_WRONG_ANSWERS } from './utils/constants';
 
 class HangmanConclusion extends React.Component {
     renderResults(resultClass, resultMessage) {
@@ -23,12 +23,12 @@ class HangmanConclusion extends React.Component {
 
         if (numEmptyLetters <= 0) {
             return this.renderResults(
-                "victory",
-                "Victory! You guessed all the letters correctly!"
+                'victory',
+                'Victory! You guessed all the letters correctly!'
             );
         } else if (numWrongLetters >= MAX_WRONG_ANSWERS) {
             return this.renderResults(
-                "defeat",
+                'defeat',
                 `Defeat! You have run out of guesses.
                 The word was '${guessWord}'.`
             );
@@ -69,6 +69,6 @@ HangmanConclusion.propTypes = {
 HangmanConclusion.defaultProps = {
     numEmptyLetters: 1,
     numWrongLetters: 0,
-    guessWord: "SOMETHING",
+    guessWord: 'SOMETHING',
     resetAction: () => {}
 };

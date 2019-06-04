@@ -1,9 +1,9 @@
-import { GUESS_LETTER, RESET_HANGMAN } from "./types";
-import addCorrectGuess from "../utils/addCorrectGuess";
-import addWrongGuess from "../utils/addWrongGuess";
-import getNewRightLetters from "../utils/getNewRightLetters";
+import { GUESS_LETTER, RESET_HANGMAN } from './types';
+import addCorrectGuess from '../utils/addCorrectGuess';
+import addWrongGuess from '../utils/addWrongGuess';
+import getNewRightLetters from '../utils/getNewRightLetters';
 
-import getNewGuessWord from "../utils/getNewGuessWord";
+import getNewGuessWord from '../utils/getNewGuessWord';
 
 export const initialGuessWord = getNewGuessWord();
 

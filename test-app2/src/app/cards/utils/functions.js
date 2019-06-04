@@ -3,21 +3,21 @@ export function createNewArray(length) {
     let countUp = 0;
 
     for (let i = 0; i < length; i++) {
-        newArray[i] = Math.floor(Math.random() * 2) === 1 ? "Up" : "Down";
-        countUp += newArray[i] === "Up" ? 1 : 0;
+        newArray[i] = Math.floor(Math.random() * 2) === 1 ? 'Up' : 'Down';
+        countUp += newArray[i] === 'Up' ? 1 : 0;
     }
 
     // Ensures at least one cell is face-up
     if (countUp === 0) {
         const n = Math.floor(Math.random() * 6);
-        newArray[n] = "Up";
+        newArray[n] = 'Up';
     }
 
     return newArray;
 }
 
 export function removeAndFlipCards(cardArray, indexToRemove) {
-    if (cardArray[indexToRemove] !== "Up") {
+    if (cardArray[indexToRemove] !== 'Up') {
         return cardArray;
     }
 
@@ -32,14 +32,14 @@ export function removeAndFlipCards(cardArray, indexToRemove) {
     }
 
     // Remove Selected Card
-    cardArray[indexToRemove] = "Removed";
+    cardArray[indexToRemove] = 'Removed';
 
     return cardArray;
 }
 
 export function flipCard(cardValue) {
-    if (cardValue !== "Removed") {
-        return cardValue === "Down" ? "Up" : "Down";
+    if (cardValue !== 'Removed') {
+        return cardValue === 'Down' ? 'Up' : 'Down';
     }
     return cardValue;
 }

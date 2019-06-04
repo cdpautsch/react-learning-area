@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function HangmanLetter(props) {
     const { className, letter } = props;
@@ -13,6 +13,6 @@ HangmanLetter.propTypes = {
 };
 
 HangmanLetter.defaultProps = {
-    letter: "",
-    className: "letter"
+    letter: '',
+    className: 'letter'
 };

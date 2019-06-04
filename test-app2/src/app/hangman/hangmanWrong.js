@@ -1,8 +1,8 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import HangmanLetter from "./hangmanLetter";
+import HangmanLetter from './hangmanLetter';
 
 class HangmanWrong extends React.Component {
     renderWrongLetters(letterArray) {

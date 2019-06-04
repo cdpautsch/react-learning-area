@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware, compose } from "redux";
-import { createLogger } from "redux-logger";
+import { createStore, applyMiddleware, compose } from 'redux';
+import { createLogger } from 'redux-logger';
 // import { thunkMiddleware } from 'redux-thunk';
 
-import rootReducer from "./rootReducer";
+import rootReducer from './rootReducer';
 
 const loggerMiddleware = createLogger();
 

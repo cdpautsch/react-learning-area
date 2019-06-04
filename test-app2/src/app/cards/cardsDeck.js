@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { removeCard } from "./redux";
-import Card from "./card";
+import { removeCard } from './redux';
+import Card from './card';
 
 export class CardsDeck extends React.Component {
     renderCards(cardArray) {
@@ -52,6 +52,6 @@ CardsDeck.propTypes = {
 };
 
 CardsDeck.defaultProps = {
-    cardArray: ["Up"],
+    cardArray: ['Up'],
     onClick: () => {}
 };

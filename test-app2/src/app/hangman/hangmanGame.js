@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import Hangman from "./hangman";
-import HangmanWrong from "./hangmanWrong";
-import HangmanInput from "./hangmanInput";
-import HangmanConclusion from "./hangmanConclusion";
+import Hangman from './hangman';
+import HangmanWrong from './hangmanWrong';
+import HangmanInput from './hangmanInput';
+import HangmanConclusion from './hangmanConclusion';
 
 function HangmanGame() {
     return (

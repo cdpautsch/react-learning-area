@@ -1,5 +1,5 @@
-import * as types from "./types";
-import getNewGuessWord from "../utils/getNewGuessWord";
+import * as types from './types';
+import getNewGuessWord from '../utils/getNewGuessWord';
 
 export function guessLetter(letter) {
     return {

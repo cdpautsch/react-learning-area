@@ -1,8 +1,8 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { resetCards } from "./redux";
+import { resetCards } from './redux';
 
 export class Conclusion extends React.Component {
     renderResults(resultClass, resultMessage) {
@@ -21,11 +21,11 @@ export class Conclusion extends React.Component {
 
     render() {
         const { cardArray } = this.props;
-        if (cardArray.includes("Up") === false) {
-            if (cardArray.includes("Down") === false) {
-                return this.renderResults("victory", "You won!");
+        if (cardArray.includes('Up') === false) {
+            if (cardArray.includes('Down') === false) {
+                return this.renderResults('victory', 'You won!');
             } else {
-                return this.renderResults("defeat", "You lost!");
+                return this.renderResults('defeat', 'You lost!');
             }
         } else {
             return null;
@@ -56,6 +56,6 @@ Conclusion.propTypes = {
 };
 
 Conclusion.defaultProps = {
-    cardArray: [""],
+    cardArray: [''],
     onClick: () => {}
 };

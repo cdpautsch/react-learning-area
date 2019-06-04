@@ -1,10 +1,10 @@
-import React from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import uuidv1 from "uuid";
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import uuidv1 from 'uuid';
 
-import HangmanLetter from "./hangmanLetter";
-import HangmanDrawing from "./hangmanDrawing";
+import HangmanLetter from './hangmanLetter';
+import HangmanDrawing from './hangmanDrawing';
 
 class Hangman extends React.Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class Hangman extends React.Component {
                 <HangmanLetter
                     key={uuidv1()}
                     letter={letter}
-                    className={letter === " " ? "space" : "letter"}
+                    className={letter === ' ' ? 'space' : 'letter'}
                 />
             );
         });
