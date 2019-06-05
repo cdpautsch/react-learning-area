@@ -1,2 +1,2 @@
 # Theme has specific styling that I want to keep
-/src/styles/_theme.scss
+./src/styles/_theme.scss

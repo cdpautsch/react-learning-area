@@ -8,5 +8,6 @@
         "prettier/prettier": true,
         "no-descending-specificity": null,
         "string-quotes": "single"
-    }
+    },
+    "ignoreFiles": ["./src/styles/_theme.scss", "./node_modules/*"]
 }
