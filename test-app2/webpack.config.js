@@ -4,8 +4,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 
-const SRC_DIR = path.resolve(__dirname, '../src');
-const DIST_DIR = path.resolve(__dirname, '../dist');
+const SRC_DIR = path.resolve(__dirname, './src');
+const DIST_DIR = path.resolve(__dirname, './dist');
 
 module.exports = (_env, argv) => ({
     entry: `${SRC_DIR}/index.js`,
@@ -97,7 +97,7 @@ module.exports = (_env, argv) => ({
         filename: 'bundle.js'
     },
     devServer: {
-        contentBase: '../dist',
+        contentBase: './dist',
         open: true,
         inline: true,
         hot: true,

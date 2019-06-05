@@ -13,7 +13,7 @@
         "no-else-return": 0,
         "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
         "no-param-reassign": 0,
-        "no-use-before-define": ["error",  { "functions": false }],
+        "no-use-before-define": ["error", { "functions": false }],
         "import/no-named-as-default": 0
     },
     "env": {
@@ -24,7 +24,7 @@
     "settings": {
         "import/resolver": {
             "webpack": {
-                "config": "./config/webpack-common-config.js"
+                "config": "./webpack.config.js"
             }
         }
     }
